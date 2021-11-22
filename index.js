@@ -24,7 +24,8 @@ window.antlrLSFValidate = function antlrLSFValidate(input) {
     var tokens = new antlr4.CommonTokenStream(lexer);
     var parser = new LSFJSLogicsParser(tokens);
     var annotations = [];
-    var listener = new AnnotatingErrorListener(annotations)
+    var listener = new AnnotatingErrorListener(annotations);
+    lexer.removeErrorListeners();
     parser.removeErrorListeners();
     parser.addErrorListener(listener);
     parser.script();
