@@ -1,4 +1,4 @@
-grammar LSFJSLogics;
+grammar LsfJSLogics;
 
 
 
