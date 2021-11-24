@@ -4,7 +4,7 @@ module.exports = {
     mode: 'production',
     entry: './index.js',
     output: {
-        filename: 'antlrLSFJSLogics.js',
+        filename: 'antlrLsfJSLogics.js',
         path: path.resolve(__dirname, 'dist'),
     },
     resolve: {
