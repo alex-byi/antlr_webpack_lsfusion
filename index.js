@@ -1,6 +1,6 @@
 import antlr4 from "antlr4";
-import LSFJSLogicsLexer from './LSFJSLogicsLexer';
-import LSFJSLogicsParser from './LSFJSLogicsParser';
+import LsfJSLogicsLexer from './LsfJSLogicsLexer';
+import LsfJSLogicsParser from './LsfJSLogicsParser';
 
 class AnnotatingErrorListener extends antlr4.error.ErrorListener {
     constructor(annotations) {
@@ -20,11 +20,11 @@ class AnnotatingErrorListener extends antlr4.error.ErrorListener {
 
 window.antlrLSFValidate = function antlrLSFValidate(input) {
     var stream = new antlr4.InputStream(input);
-    var lexer = new LSFJSLogicsLexer(stream);
+    var lexer = new LsfJSLogicsLexer(stream);
     var tokens = new antlr4.CommonTokenStream(lexer);
-    var parser = new LSFJSLogicsParser(tokens);
+    var parser = new LsfJSLogicsParser(tokens);
     var annotations = [];
-    var listener = new AnnotatingErrorListener(annotations);
+    var listener = new AnnotatingErrorListener(annotations)
     lexer.removeErrorListeners();
     parser.removeErrorListeners();
     parser.addErrorListener(listener);
