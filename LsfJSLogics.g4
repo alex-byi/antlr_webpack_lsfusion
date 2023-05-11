@@ -10,9 +10,9 @@ grammar LsfJSLogics;
 
 
 
-script
-	:	moduleHeader
-		statements
+script	
+	:	moduleHeader 
+		statements 
 		EOF
 	;
 
@@ -42,23 +42,21 @@ statement
 		|	followsStatement
 		|	writeWhenStatement
 		|	eventStatement
-		|	showDepStatement
 		|	globalEventStatement
 		|	aspectStatement
 		|	tableStatement
-		|	loggableStatement
 		|	indexStatement
 		|	formStatement
 		|	designStatement
 		|	windowStatement
 		|	navigatorStatement
 		|	metaCodeDeclarationStatement
-		|	metaCodeStatement
+		|	metaCodeStatement 
 		|	emptyStatement
 		)
 	;
 
-metaCodeParsingStatement
+metaCodeParsingStatement  
 	:
 		statements
 	;
@@ -68,39 +66,42 @@ metaCodeParsingStatement
 
 
 
-classStatement
+classStatement 
 
 
 	:	'CLASS'
 		( 'ABSTRACT'  | 'NATIVE' )?
 		( 'COMPLEX' )?
 	 simpleNameWithCaption
+		( imageStatement)?
 	 classInstancesAndParents
 	;
 
 extendClassStatement
 
-	:	'EXTEND' 'CLASS'
-	 compoundID
-	 classInstancesAndParents
+	:	'EXTEND' 'CLASS' 
+	 compoundID 
+	 classInstancesAndParents 
 	;
 
-classInstancesAndParents
+classInstancesAndParents 
 
-	:	(
+	:	( 
 			'{'
-				( simpleNameWithCaption
-				( ',' simpleNameWithCaption )*)?
+				( simpleNameWithCaption 
+				(  imageStatement)? 
+				( ',' simpleNameWithCaption 
+				(  imageStatement)? )*)?
 			'}'
 			( classParentsList ';' )?
 		|
 			( classParentsList )? ';'
 		)
-	;
+	; 
 
-classParentsList
-	:	':' nonEmptyClassIdList
-	;
+classParentsList 
+	:	':' nonEmptyClassIdList 
+	; 
 
 
 
@@ -122,11 +123,11 @@ groupStatement
 
 
 formStatement
+ 
 
 
-
-	:	(  formDeclaration
-		| extendingFormDeclaration
+	:	(  formDeclaration 
+		| extendingFormDeclaration 
 		)
 		( 	formGroupObjectsList
 		|	formTreeGroupObjectList
@@ -150,52 +151,52 @@ formStatement
 
 dialogFormDeclaration
 	:	'LIST' classId 'OBJECT' ID
-
+		
 	;
 
 editFormDeclaration
 	:	'EDIT' classId 'OBJECT' ID
-
+		
 	;
-
+	
 reportFilesDeclaration
-	:	'REPORTFILES' reportPath ( ',' reportPath)*
+	:	( 'REPORTS' | 'REPORTFILES') reportPath ( ',' reportPath)*
 	;
-
+	
 reportPath
 
 
-	:	( 	'TOP'
-		|   formGroupObjectEntity
-		)
-	  formPropertyObject
+	:	( 	'TOP' 
+		|   formGroupObjectEntity 
+		) 
+	  formPropertyObject 
 	;
 
 reportDeclaration
 
 
-	:	'REPORT'  formPropertyObject
+	:	'REPORT'  formPropertyObject 
 	;
 
 formExtIDDeclaration
 
 
-	:	'FORMEXTID' stringLiteral
+	:	'FORMEXTID' stringLiteral 
 	;
 
-formDeclaration
+formDeclaration 
 
 
-	:	'FORM'
+	:	'FORM' 
 	 simpleNameWithCaption
-		( 	( 'IMAGE' stringLiteral )
+		(  imageStatement
 		|	( 'AUTOREFRESH' intLiteral )
 		|	( 'LOCALASYNC' )
 		)*
 	;
 
 
-extendingFormDeclaration
+extendingFormDeclaration 
 
 	:	'EXTEND' 'FORM' compoundID
 	;
@@ -204,7 +205,7 @@ formGroupObjectsList
 
 
 	:	'OBJECTS'
-	 formGroupObjectDeclaration
+	 formGroupObjectDeclaration 
 		( ',' formGroupObjectDeclaration )*
 	;
 
@@ -213,413 +214,448 @@ formTreeGroupObjectList
 
 	:	'TREE'
 		(  ID )?
-	 formTreeGroupObject
+	 formTreeGroupObject 
 		( ',' formTreeGroupObject )*
 	     formTreeGroupObjectOptions
 	;
 
-formGroupObjectDeclaration
-	: formGroupObject
+formGroupObjectDeclaration 
+	: formGroupObject 
 	    formGroupObjectOptions
 	    formGroupObjectOptionsContext
 	;
 
 formGroupObjectOptions
-	:	(  formGroupObjectViewType
-		| formGroupObjectPageSize
-		| formGroupObjectUpdate
-		| formGroupObjectRelativePosition
-		| formGroupObjectGroup
-		|   formExtID
-		|   formExtKey
-		|   formSubReport
+	:	(  formGroupObjectViewType 
+		| formGroupObjectPageSize 
+		| formGroupObjectUpdate 
+		| formGroupObjectRelativePosition 
+		| formGroupObjectGroup 
+		|   formExtID 
+		|   formExtKey 
+		|   formSubReport 
 		)*
 	;
 
 formGroupObjectOptionsContext
 
-	:	(  formGroupObjectBackground
-		| formGroupObjectForeground
+	:	(  formGroupObjectBackground 
+		| formGroupObjectForeground 
 		)*
 	;
 
-formTreeGroupObjectOptions
-	:	(  formGroupObjectRelativePosition
+formTreeGroupObjectOptions 
+	:	(  formGroupObjectRelativePosition 
 		)*
 	;
 
-formGroupObject
+formGroupObject 
 	: formSingleGroupObjectDeclaration
-
+		
 	| formMultiGroupObjectDeclaration
-
+		
 	;
 
-formTreeGroupObject
+formTreeGroupObject 
 
 	:	(  formSingleGroupObjectDeclaration
-
+		
 
 		( 'PARENT' formExprDeclaration )? )
 
 	| formMultiGroupObjectDeclaration
-
+		
 
         (  '('
-		'PARENT'  formExprDeclaration
+		'PARENT'  formExprDeclaration 
         		( ',' formExprDeclaration )*
         ')' )?
 
 	;
 
-formGroupObjectViewType
-	: groupObjectClassViewType
+formGroupObjectViewType 
+	: groupObjectClassViewType 
 	;
 
-groupObjectClassViewType
-	:   'PANEL'
-	|   'TOOLBAR'
-	|   'GRID'
-    | listViewType
+groupObjectClassViewType 
+	:   'PANEL' 
+	|   'TOOLBAR' 
+	|   'GRID' 
+    | listViewType 
 	;
 
-propertyClassViewType
-	:   'PANEL'
-	|   'GRID'
-	|   'TOOLBAR'
+propertyClassViewType 
+	:   'PANEL' 
+	|   'GRID' 
+	|   'TOOLBAR' 
 	;
 
-propertyCustomView
+propertyCustomView 
 	:	'CUSTOM' ( ( stringLiteral )
 	    | ( ( stringLiteral )?
-
-		( ( 'CHANGE' | ( 'EDIT' PRIMITIVE_TYPE))  ( stringLiteral )?)))
+        
+		( ( 'CHANGE' | ( 'EDIT' primitiveType))  ( stringLiteral )?))) 
 	;
 
-listViewType
-	:   'PIVOT'  ( 'DEFAULT' | 'NODEFAULT' )?  pivotOptions
-	|   'MAP' (  stringLiteral)?
-	|   'CUSTOM' stringLiteral
-	|   'CALENDAR'
+listViewType 
+	:   'PIVOT'  ( 'DEFAULT' | 'NODEFAULT' )?  pivotOptions 
+	|   'MAP' (  stringLiteral)? 
+	|   'CUSTOM' stringLiteral  ( 'OPTIONS' customOptionsGroupObjectContext )?
+	|   'CALENDAR' 
     ;
 
-propertyGroupType
+customOptionsGroupObjectContext 
+	: formPropertyObjectContext
+	;
+
+propertyGroupType 
 	: 	( 'SUM'  | 'MAX'  | 'MIN' )
 	;
 
-propertyLastAggr
+propertyLastAggr 
 	: 	'LAST'
 	    ( 'DESC'  )?
 	    '('
-        formPropertyObject
+        formPropertyObject 
         ( ',' formPropertyObject )*
         ')'
 	;
 
 
-propertyFormula
+propertyFormula 
 
-	: 	'FORMULA' stringLiteral
+	: 	'FORMULA' stringLiteral 
 	    '('
-	        ( formPropertyDraw
+	        ( formPropertyDraw 
 	        ( ',' formPropertyDraw )*)?
 	    ')'
 	;
 
-formGroupObjectPageSize
-	:	'PAGESIZE' intLiteral
+formGroupObjectPageSize 
+	:	'PAGESIZE' intLiteral 
 	;
 
-formGroupObjectRelativePosition
-	:	'AFTER' formGroupObjectEntity
-	|	'BEFORE' formGroupObjectEntity
-	|	'FIRST'
+staticRelativePosition 
+	:	'FIRST' 
+    |	'LAST' 
+    |	'DEFAULT' 
 	;
 
-formGroupObjectBackground
+formGroupObjectRelativePosition 
+	:	'AFTER' formGroupObjectEntity 
+	|	'BEFORE' formGroupObjectEntity 
+	| staticRelativePosition 
+	;
+
+formPropertyDrawRelativePosition 
+	:	'AFTER' formPropertyDraw 
+	|	'BEFORE' formPropertyDraw 
+	| staticRelativePosition 
+	;
+
+componentRelativePosition 
+	:	'AFTER' componentSelector 
+	|	'BEFORE' componentSelector 
+    | staticRelativePosition 
+	;
+
+navigatorElementRelativePosition 
+	:	'AFTER' navigatorElementSelector 
+	|	'BEFORE' navigatorElementSelector 
+	| staticRelativePosition 
+	;
+
+formGroupObjectBackground 
     :	'BACKGROUND' formPropertyObjectContext
     ;
 
-formGroupObjectForeground
-    :	'FOREGROUND' formPropertyObjectContext
+formGroupObjectForeground 
+    :	'FOREGROUND' formPropertyObjectContext 
     ;
 
-formGroupObjectUpdate
+formGroupObjectUpdate 
 
-	:	'FIRST'
-	|	'LAST'
-	|   'PREV'
-	|   'NULL'
+	:	'FIRST' 
+	|	'LAST' 
+	|   'PREV' 
+	|   'NULL' 
 	;
 
-formGroupObjectGroup
-	:	'IN' compoundID
+formGroupObjectGroup 
+	:	'IN' compoundID 
 	;
 
-formExtID
-	:	'EXTID' stringLiteral
+formExtID 
+	:	'EXTID' stringLiteral 
 	;
 
 formExtKey
 	:	'EXTKEY'
 	;
 
-formSubReport
+formSubReport 
 	:	'SUBREPORT' ( formPropertyObject )?
 	;
 
-formSingleGroupObjectDeclaration
-	: formObjectDeclaration
+formSingleGroupObjectDeclaration 
+	: formObjectDeclaration 
 	;
 
-formMultiGroupObjectDeclaration
+formMultiGroupObjectDeclaration 
 
 	:	( ID  EQ)?
 		'('
-		 formObjectDeclaration
+		 formObjectDeclaration 
 			( ',' formObjectDeclaration )*
 		')'
 	;
 
 
-formObjectDeclaration
+formObjectDeclaration 
 	:	( ( ID )? ( localizedStringLiteral )? EQ)?
-	 classId
-		(
-		    'ON' 'CHANGE' formActionObject
-		|   'EXTID' stringLiteral
+	 classId 
+		( 
+		    'ON' 'CHANGE' formActionObject 
+		|   'EXTID' stringLiteral 
 		)*
-	;
-
+	; 
+	
 formPropertiesList
 
 
 	:	'PROPERTIES' '(' idList ')' formPropertyOptionsList formPropertyUList
-
+		
 	|	'PROPERTIES' formPropertyOptionsList formMappedPropertiesList
+		
+	;	
 
-	;
 
+formPropertyOptionsList 
 
-formPropertyOptionsList
-
-	:	(   propertyEditTypeLiteral
-	    |   'SELECTOR'
-		|	'HINTNOUPDATE'
-		|	'HINTTABLE'
-        |    formSessionScopeClause
-		|	'OPTIMISTICASYNC'
-		|	'COLUMNS' ( stringLiteral)? '(' nonEmptyIdList ')'
-		|	'SHOWIF' formPropertyObject
-		|	'READONLYIF' formPropertyObject
-		|	'BACKGROUND' formPropertyObject
-		|	'FOREGROUND' formPropertyObject
-		|	'IMAGE' formPropertyObject
-		|	'HEADER' formPropertyObject
-		|	'FOOTER' formPropertyObject
-		| propertyClassViewType
-		| propertyCustomView
-		| propertyGroupType
-		| propertyLastAggr
-		| propertyFormula
-		|	'DRAW' formGroupObjectEntity
-		|	'BEFORE' formPropertyDraw
-		|	'AFTER'  formPropertyDraw
-		|	'FIRST'
-		|	'QUICKFILTER' formPropertyDraw
-		|	'ON' formEventType formActionObject
-		|	'ON' 'CONTEXTMENU' ( localizedStringLiteralNoID)? formActionObject
-		|	'ON' 'KEYPRESS' stringLiteral formActionObject
-		|	'EVENTID' stringLiteral
-		|	'ATTR'
-		|   'IN' compoundID
-		|   'EXTID' stringLiteral
-		|   propertyDrawOrder
-		|   'FILTER'
-		|   'COLUMN'
-		|   'ROW'
-		|   'MEASURE'
-		|    stickyOption
+	:	(   propertyEditTypeLiteral 
+	    |   'SELECTOR' 
+		|	'HINTNOUPDATE' 
+		|	'HINTTABLE' 
+        |    formSessionScopeClause 
+		|	'OPTIMISTICASYNC' 
+		|	'COLUMNS' ( stringLiteral)? '(' nonEmptyIdList ')' 
+		|	'SHOWIF' formPropertyObject 
+		|	'READONLYIF' formPropertyObject 
+		|	'CLASS' formPropertyObject 
+		|	'BACKGROUND' formPropertyObject 
+		|	'FOREGROUND' formPropertyObject 
+		|	( 'IMAGE' ( formPropertyObject)?  | 'NOIMAGE'  )
+		|	'HEADER' formPropertyObject 
+		|	'FOOTER' formPropertyObject 
+		| propertyClassViewType 
+		| propertyCustomView 
+		|	'PIVOT' propertyGroupType 
+		|	'PIVOT' propertyLastAggr 
+		|	'PIVOT' propertyFormula 
+		|	'DRAW' formGroupObjectEntity 
+		|   formPropertyDrawRelativePosition 
+		|	'QUICKFILTER' formPropertyDraw 
+		|	'ON' formEventType formActionObject 
+		|	'ON' 'CONTEXTMENU' ( localizedStringLiteralNoID)? formActionObject 
+		|	'ON' 'KEYPRESS' stringLiteral formActionObject 
+		|	'EVENTID' stringLiteral 
+		|	'ATTR' 
+		|   'IN' compoundID 
+		|   ( 'EXTID' stringLiteral  | 'NOEXTID' )
+		|   'EXTNULL' 
+		|   propertyDrawOrder 
+		|   'FILTER' 
+		|   'COLUMN' 
+		|   'ROW' 
+		|   'MEASURE' 
+		|    stickyOption 
+		|    syncTypeLiteral 
 		)*
 	;
 
-formPropertyDraw
-	: ID
-	| mappedPropertyDraw
+formPropertyDraw 
+	: ID              	
+	| mappedPropertyDraw 
 	;
 
-formMappedPropertiesList
+formMappedPropertiesList 
 
-	:
-		(
+	:	
+		( 		
 		 formMappedProperty
-
-		|
-		    (
+			 
+		| 	
+		    ( 
 		    	( simpleNameOrWithCaption )?
 				EQ
-				(     formMappedPredefinedOrAction
-
+				(     formMappedPredefinedOrAction 
+                                            
 				|   formExprOrTrivialLADeclaration
-
+				    
 				| formActionDeclaration
 				    )
 				)
-
+				 
 			)
 	 formPropertyOptionsList
-
+		
 		( ','
-
-            (
+            
+            ( 		
                 formMappedProperty
-
-            |
-                (
+                 
+            | 	
+                ( 
                     ( simpleNameOrWithCaption )?
                     EQ
-                    (     formMappedPredefinedOrAction
-
+                    (     formMappedPredefinedOrAction 
+                                                
                     |   formExprOrTrivialLADeclaration
-
+                        
                     | formActionDeclaration
                         )
                     )
-
+                     
                 )
             formPropertyOptionsList
-
+            
 		)*
 	;
 
-formPropertyObject
-	:    designOrFormPropertyObject
+formPropertyObject 
+	:    designOrFormPropertyObject 
 	;
 
-designPropertyObject
-	:    designOrFormPropertyObject
+designPropertyObject 
+	:    designOrFormPropertyObject 
 	;
 
 
-designOrFormPropertyObject
+designOrFormPropertyObject 
 
-	: designOrFormExprDeclaration
-
+	: designOrFormExprDeclaration 
+		
 	;
 
-formPropertyObjectContext
-	:    designOrFormPropertyObjectContext
+formPropertyObjectContext 
+	:    designOrFormPropertyObjectContext 
 	;
 
-designOrFormPropertyObjectContext
-	: designOrFormExprDeclaration
+designOrFormPropertyObjectContext 
+	: designOrFormExprDeclaration 
 	;
 
-formActionObject
+formActionObject 
 
-	:	(  mappedPropertyObjectUsage
-		| formActionDeclaration
+	:	(  mappedPropertyObjectUsage 
+		| formActionDeclaration 
 		)
-
+		
 	;
 
-formGroupObjectEntity
-	:  ID
+formGroupObjectEntity 
+	:  ID 
 	;
 
-formMappedProperty
+formMappedProperty 
 
-	: formPropertyUsage
+	: formPropertyUsage 
 		'('
 		 idList
 		')'
 	;
 
-formMappedPredefinedOrAction
+formMappedPredefinedOrAction 
 
-	: formPredefinedOrActionUsage
+	: formPredefinedOrActionUsage 
 		'('
 		 idList
 		')'
 	;
 
-mappedPropertyObjectUsage
-	: propertyUsage
+mappedPropertyObjectUsage 
+	: propertyUsage 
 		'('
-		 idList
+		 idList 
 		')'
 	;
 
-formPropertySelector
+formPropertySelector 
 	: ID
-
-	| mappedPropertyDraw
-
+		
+	| mappedPropertyDraw	
+		
 	;
 
-mappedPropertyDraw
-	: ID
+mappedPropertyDraw 
+	: ID 
 		'('
-	 idList
+	 idList 
 		')'
 	;
 
-formPropertyUList
+formPropertyUList 
 
-	:
+	:	
 		( simpleNameOrWithCaption EQ )?
 	 formPropertyUsage formPropertyOptionsList
-
+		
 		( ','
-
+			
 			( simpleNameOrWithCaption EQ )?
 		 formPropertyUsage formPropertyOptionsList
-
+			
 		)*
 	;
 
-formPropertyUsage
+formPropertyUsage 
 
-	:  actionOrPropertyUsage
-	    |
-	     formPredefinedUsage
+	:  actionOrPropertyUsage  
+	    |	
+	     formPredefinedUsage 
    ;
-
-formPredefinedUsage
+   
+formPredefinedUsage 
 
 
     :
-        (
-				(  'NEW'
-				| 'NEWEDIT'
-				| 'EDIT'
+        ( 
+				(  'NEW'		
+				| 'NEWEDIT'	
+				| 'EDIT'		
 				)
 				(  '[' compoundID ']'   )?
 			)
-		| 'VALUE'
-		| 'INTERVAL'
-		| 'DELETE'
+		| 'VALUE'		
+		| 'INTERVAL'	
+		| 'DELETE'	
 ;
 
-formPredefinedOrActionUsage
-	:	( 'ACTION'  propertyUsage )
-	    |
-	     formPredefinedUsage
+formPredefinedOrActionUsage 
+	:	( 'ACTION'  propertyUsage ) 
+	    |	
+	     formPredefinedUsage 
 
 ;
 
-actionOrPropertyUsage
+nonEmptyActionOrPropertyUsageList 
+
+	: actionOrPropertyUsage 
+		( ',' actionOrPropertyUsage )*
+	;
+
+actionOrPropertyUsage 
 
     :
         ( 'ACTION'  )?
-        propertyUsage
+        propertyUsage     
     ;
 
 formFiltersList
 
 
 	:	'FILTERS'
-	 formExprDeclaration
+	 formExprDeclaration 
 	    ( ',' formExprDeclaration )*
 	;
 
@@ -633,72 +669,79 @@ formHintsList
 formEventsList
 
 
-	:	'EVENTS'
-	 formEventDeclaration
+	:	( 'EVENTS')?
+	 formEventDeclaration 
 		( ',' formEventDeclaration )*
 	;
 
 
-formEventDeclaration
+formEventDeclaration 
 
 	:	'ON'
-		( 	'OK' ( 'BEFORE'  | 'AFTER' )?
-		|	'APPLY' ( 'BEFORE'  | 'AFTER' )?
-		|	'CLOSE'
-		|	'INIT'
-		|	'CANCEL'
-		|	'DROP'
-		|	'QUERYCLOSE'
-		| 	'CHANGE' ID
+		( 	'OK' ( 'BEFORE'  | 'AFTER' )? 
+		|	'APPLY' ( 'BEFORE'  | 'AFTER' )? 
+		|	'CLOSE'	 
+		|	'INIT'	 
+		|	'CANCEL' 
+		|	'DROP'	 
+		|	'QUERYOK'	 
+		|	'QUERYCLOSE'	 
+		| 	'CHANGE' ID 
+		|   scheduleFormEventDeclaration 
 		)
-	 formActionObject
+		( 'REPLACE'  | 'NOREPLACE'  )?
+	 formActionObject 
+	;
+
+scheduleFormEventDeclaration 
+	:   'SCHEDULE' 'PERIOD' intLiteral  ( 'FIXED' )?
 	;
 
 
 filterGroupDeclaration
 
 
-	:	'FILTERGROUP' ID
+	:	'FILTERGROUP' ID 
 		(  formRegularFilterDeclaration  )*
 	;
 
 extendFilterGroupDeclaration
 
 
-	:	'EXTEND'
-		'FILTERGROUP' ID
+	:	'EXTEND'	
+		'FILTERGROUP' ID 
 		(  formRegularFilterDeclaration  )+
 	;
-
-formRegularFilterDeclaration
+	
+formRegularFilterDeclaration 
 
     :   'FILTER' localizedStringLiteral formExprDeclaration ( stringLiteral )? filterSetDefault
-
+        
+    ;
+	
+formExprDeclaration 
+    :    designOrFormExprDeclaration 
     ;
 
-formExprDeclaration
-    :    designOrFormExprDeclaration
-    ;
-
-designOrFormExprDeclaration
+designOrFormExprDeclaration 
 
 
-	: propertyExpressionOrLiteral
+	: propertyExpressionOrLiteral 
 	;
 
-formExprOrTrivialLADeclaration
+formExprOrTrivialLADeclaration 
 
 
 	: propertyExpressionOrTrivialLA
 	;
 
-formActionDeclaration
+formActionDeclaration 
 
 
-	: listTopContextDependentActionDefinitionBody
+	: listTopContextDependentActionDefinitionBody 
 	;
-
-filterSetDefault
+	
+filterSetDefault 
 	:	( 'DEFAULT' )?
 	;
 
@@ -706,7 +749,7 @@ userFiltersDeclaration
 
 
 	:	'USERFILTERS'
-	 formPropertyDraw
+	 formPropertyDraw 
 		( ',' formPropertyDraw  )*
 	;
 
@@ -715,15 +758,15 @@ formOrderByList
 
 	:	'ORDERS'
 	    ( 'FIRST' )?
-	    formPropertyDrawWithOrder
+	    formPropertyDrawWithOrder 
 		( ',' formPropertyDrawWithOrder  )*
 	;
-
-formPropertyDrawWithOrder
+	
+formPropertyDrawWithOrder 
 	: formPropertyDraw  ( 'DESC' )?
 	;
 
-propertyDrawOrder
+propertyDrawOrder 
 	:	'ORDER' ( 'DESC' )?
 	;
 
@@ -738,22 +781,22 @@ formPivotOptionsDeclaration
         )+
 	;
 
-groupObjectPivotOptions
-    :   ID
-	  pivotOptions
+groupObjectPivotOptions 
+    :   ID 
+	  pivotOptions 
     ;
 
-pivotOptions
+pivotOptions 
     :
-    (    stringLiteral
-    |   propertyGroupType
+    (    stringLiteral 
+    |   propertyGroupType 
     |   ( 'SETTINGS'   | 'NOSETTINGS'  )
     |   ( 'CONFIG'  stringLiteral )
     )*
     ;
 
-pivotPropertyDrawList
-	: formPropertyDraw
+pivotPropertyDrawList 
+	: formPropertyDraw 
 	|   '(' formPropertyDraw  ( ',' formPropertyDraw  )* ')'
 	;
 
@@ -762,271 +805,273 @@ pivotPropertyDrawList
 
 
 propertyStatement
+ 
 
 
-
-	: actionOrPropertyDeclaration
-
+	: actionOrPropertyDeclaration 
+		
         EQ
-        propertyDefinition
-
+        propertyDefinition 
+        
         ( ( propertyOptions  ) | ';')
 	;
 
 actionStatement
-
+ 
 
 
 	:	'ACTION'?
-	    actionOrPropertyDeclaration
-
-        (
-            (    contextIndependentActionDB
+	    actionOrPropertyDeclaration 
+		
+        ( 
+            (    contextIndependentActionDB 
                 ( ( actionOptions  ) | ';')
             )
         |
-            (    listTopContextDependentActionDefinitionBody
+            (    listTopContextDependentActionDefinitionBody 
                 ( actionOptions   )?
             )
         )
 	;
 
-propertyDefinition
-	: contextIndependentPD
-	| propertyExpressionOrContextIndependent
-	|	'NATIVE' classId '(' classIdList ')'
+propertyDefinition 
+	: contextIndependentPD 
+	| propertyExpressionOrContextIndependent 
+	|	'NATIVE' classId '(' classIdList ')' 
 	;
 
 
-actionOrPropertyDeclaration
-	: simpleNameWithCaption
-		( '(' typedParameterList ')' )?
+actionOrPropertyDeclaration 
+	: simpleNameWithCaption 
+		( '(' typedParameterList ')' )? 
 	;
 
 
-propertyExpression
-    :   propertyExpressionOrContextIndependent
-
+propertyExpression 
+    :   propertyExpressionOrContextIndependent 
+        
 ;
 
-propertyExpressionOrContextIndependent
-    :   propertyExpressionOrNot
-
+propertyExpressionOrContextIndependent 
+    :   propertyExpressionOrNot 
+        
 ;
 
-propertyExpressionOrTrivialLA
-    :   propertyExpressionOrNot
-
+propertyExpressionOrTrivialLA 
+    :   propertyExpressionOrNot 
+        
 ;
 
-propertyExpressionOrLiteral
-    :   propertyExpressionOrNot
-
+propertyExpressionOrLiteral 
+    :   propertyExpressionOrNot 
+        
 ;
 
-propertyExpressionOrCompoundID
-    :   propertyExpressionOrNot
-
+propertyExpressionOrCompoundID 
+    :   propertyExpressionOrNot 
+        
 ;
 
-propertyExpressionOrNot
+propertyExpressionOrNot 
 
 
-	: ifPE
+	: ifPE 
 	;
 
 
-ifPE
+ifPE 
 
 
-	: orPE
-        (
-        'IF' orPE
+	: orPE 
+        (  
+        'IF' orPE 
         )*
 	;
 
-orPE
+orPE 
 
 
-	: xorPE
-		(
-		'OR' xorPE
+	: xorPE 
+		(  
+		'OR' xorPE 
 		 )*
 	;
 
-xorPE
+xorPE 
 
 
-	: andPE
-		(
-		'XOR' andPE
+	: andPE 
+		(  
+		'XOR' andPE 
 		)*
 	;
 
-andPE
+andPE 
 
 
-	: notPE
-		(
-		'AND' notPE
+	: notPE 
+		(  
+		'AND' notPE 
         )*
 	;
 
-notPE
+notPE 
 
 
-	:	'NOT' notPE
-	| equalityPE
+	:	'NOT' notPE  
+	| equalityPE 
 	;
 
-equalityPE
+equalityPE 
 
 
-	: relationalPE
-		(
+	: relationalPE 
+		(  
 		( EQ_OPERAND  | EQ )
-	 relationalPE
+	 relationalPE 
 		)?
 	;
 
 
-relationalPE
+relationalPE 
 
 
-	: likePE
-		(
-			(
-			    relOperand
-			    likePE
-
+	: likePE 
+		( 
+			(    
+			    relOperand 
+			    likePE 
+			    
 			)
 		)?
 	;
 
 
-likePE
+likePE 
 
 
-	: additiveORPE
-		(
-		'LIKE'
-	 additiveORPE
+	: additiveORPE 
+		(  
+		( 'LIKE' | 'MATCH' )
+	 additiveORPE 
         )?
 	;
 
-additiveORPE
+additiveORPE 
 
 
-	: additivePE
-		(
-		( ADDOR_OPERAND additivePE
+	: additivePE 
+		(  
+		( ADDOR_OPERAND additivePE 
         ))*
 	;
+	
+	
+additivePE 
 
 
-additivePE
+	: multiplicativePE 
+		(  
+		( PLUS | MINUS) 
+	 multiplicativePE 
+		)*
+	;
+		
+	
+multiplicativePE 
 
 
-	: multiplicativePE
-		(
-		( PLUS | MINUS)
-	 multiplicativePE
+	: unaryMinusPE 
+		(  
+	 multOperand 
+	 unaryMinusPE 
 		)*
 	;
 
+unaryMinusPE 
 
-multiplicativePE
 
-
-	: unaryMinusPE
-		(
-	 multOperand
-	 unaryMinusPE
-		)*
+	:	MINUS unaryMinusPE  
+	| postfixUnaryPE 
 	;
 
-unaryMinusPE
+		 
+postfixUnaryPE 
 
 
-	:	MINUS unaryMinusPE
-	| postfixUnaryPE
-	;
-
-
-postfixUnaryPE
-
-
-	: simplePE
-		(
-
-		    (
-			    '[' uintLiteral ']'
+	: simplePE 
+		( 
+		    
+		    ( 
+			    '[' uintLiteral ']' 
                 |
                 ( 'IS'  | 'AS'  )
                 classId
             )
 		)?
+	;		 
+
+		 
+simplePE 
+	:	'(' propertyExpression ')'  
+	| expressionPrimitive  
 	;
 
-
-simplePE
-	:	'(' propertyExpression ')'
-	| expressionPrimitive
+	
+expressionPrimitive 
+	: singleParameter 
+	| expressionFriendlyPD 
 	;
 
-
-expressionPrimitive
-	: singleParameter
-	| expressionFriendlyPD
-	;
-
-singleParameter
+singleParameter 
 
 
 	:
-	     typedParameter
+	     typedParameter 
 	    |
-	     RECURSIVE_PARAM
+	     RECURSIVE_PARAM 
+	;
+	
+expressionFriendlyPD 
+
+	: joinPropertyDefinition  
+	| multiPropertyDefinition 
+	| overridePropertyDefinition 
+	| ifElsePropertyDefinition 
+	| maxPropertyDefinition 
+	| casePropertyDefinition 
+	| partitionPropertyDefinition 
+	| groupCDPropertyDefinition 
+	| recursivePropertyDefinition  
+	| structCreationPropertyDefinition 
+	| concatPropertyDefinition 
+    | jsonPropertyDefinition 
+    | jsonFormPropertyDefinition 
+	| castPropertyDefinition 
+	| sessionPropertyDefinition 
+	| signaturePropertyDefinition 
+	| activeTabPropertyDefinition 
+	| roundPropertyDefinition 
+	| constantProperty 
 	;
 
-expressionFriendlyPD
+contextIndependentPD 
 
-	: joinPropertyDefinition
-	| multiPropertyDefinition
-	| overridePropertyDefinition
-	| ifElsePropertyDefinition
-	| maxPropertyDefinition
-	| casePropertyDefinition
-	| partitionPropertyDefinition
-	| groupCDPropertyDefinition
-	| recursivePropertyDefinition
-	| structCreationPropertyDefinition
-	| concatPropertyDefinition
-	| castPropertyDefinition
-	| sessionPropertyDefinition
-	| signaturePropertyDefinition
-	| activeTabPropertyDefinition
-	| roundPropertyDefinition
-	| constantProperty
+
+	:  dataPropertyDefinition 
+	| abstractPropertyDefinition 
+	| formulaPropertyDefinition 
+	| aggrPropertyDefinition 
+	| groupObjectPropertyDefinition 
+	| reflectionPropertyDefinition 
 	;
 
-contextIndependentPD
+joinPropertyDefinition 
 
 
-	:  dataPropertyDefinition
-	| abstractPropertyDefinition
-	| formulaPropertyDefinition
-	| aggrPropertyDefinition
-	| groupObjectPropertyDefinition
-	| reflectionPropertyDefinition
-	;
-
-joinPropertyDefinition
-
-
-	:	( 'JOIN')?
+	:	( 'JOIN')? 
 		(  propertyUsage
-		| inlineProperty
+		| inlineProperty 
 		)
 		'('
 	 propertyExpressionList
@@ -1034,33 +1079,34 @@ joinPropertyDefinition
 	;
 
 
-aggrPropertyDefinition
+aggrPropertyDefinition 
 
 
 	:	'AGGR'
-
+	    baseEventPE
 	    classId
 	    'WHERE'
-
 	    propertyExpression
+	    (   'NEW' baseEventNotPE)?
+	    (   'DELETE' baseEventNotPE)?
 	;
-
-groupCDPropertyDefinition
+	
+groupCDPropertyDefinition 
 
 
 	:	'GROUP'
 	    groupPropertyBodyDefinition
 	    ( 'BY' nonEmptyPropertyExpressionList)?
 	;
-
-groupPropertyBodyDefinition
-	:
-    	(
-    	    groupingType
-            nonEmptyPropertyExpressionList
+	
+groupPropertyBodyDefinition 
+	:	
+    	( 
+    	    groupingType 
+            nonEmptyPropertyExpressionList 
         |
-            groupingTypeOrder
-            nonEmptyPropertyExpressionList
+            groupingTypeOrder 
+            nonEmptyPropertyExpressionList 
             ( 'ORDER' ( 'DESC'  )?
             nonEmptyPropertyExpressionList )
         )
@@ -1068,51 +1114,51 @@ groupPropertyBodyDefinition
     ;
 
 
-groupingType
-	:	'SUM'
-	|	'MAX'
-	|	'MIN'
-	|	'AGGR'
-	|	'NAGGR'
-	|	'EQUAL'
+groupingType 
+	:	'SUM' 	
+	|	'MAX' 	
+	|	'MIN' 	
+	|	'AGGR' 
+	|	'NAGGR' 
+	|	'EQUAL'		
 	;
 
-groupingTypeOrder
-	:	'CONCAT'
-	|	'LAST'
+groupingTypeOrder 
+	:	'CONCAT' 
+	|	'LAST'	
 	;
 
 
-partitionPropertyDefinition
+partitionPropertyDefinition 
 
 
-	:	'PARTITION'
-		(
-			( 	'SUM'
-			|	'PREV'
+	:	'PARTITION' 
+		( 
+			( 	'SUM'	 
+			|	'PREV'	
 			)
 		|	'UNGROUP'
-		 propertyUsage
-			( 	'PROPORTION'
-				( 'STRICT' )?
-				'ROUND' '(' intLiteral ')'
-			|	'LIMIT'
-				( 'STRICT' )?
+		 propertyUsage 
+			( 	'PROPORTION'  
+				( 'STRICT' )? 
+				'ROUND' '(' intLiteral ')' 
+			|	'LIMIT'  
+				( 'STRICT' )? 
 			)
 		)
-	 propertyExpression
+	 propertyExpression 
 		( 	'ORDER' ( 'DESC'  )?
-		 nonEmptyPropertyExpressionList
-		)?
+		 nonEmptyPropertyExpressionList 
+		)? 
 		( 'WINDOW' 'EXCEPTLAST' )?
 		( 	'BY'
-		 nonEmptyPropertyExpressionList
-
+		 nonEmptyPropertyExpressionList 
+    		
 		)?
 	;
 
 
-dataPropertyDefinition
+dataPropertyDefinition 
 
 
 	:	'DATA'
@@ -1123,22 +1169,22 @@ dataPropertyDefinition
 		')')?
 	;
 
-nestedLocalModifier
-	:	( 'NESTED'
-	        (    'MANAGESESSION'
-	        |   'NOMANAGESESSION'
+nestedLocalModifier 
+	:	( 'NESTED' 
+	        (    'MANAGESESSION' 
+	        |   'NOMANAGESESSION' 
 	        )?
         )?
 	;
 
-abstractPropertyDefinition
+abstractPropertyDefinition 
 
 
 	:	'ABSTRACT'
-		(
-			( 	'CASE'
-			|	'MULTI'
-			|   'VALUE'
+		( 
+			( 	'CASE' 
+			|	'MULTI'	 
+			|   'VALUE'  
 			)
 			( abstractExclusiveOverrideOption )?
 		)?
@@ -1149,14 +1195,14 @@ abstractPropertyDefinition
 		')')?
 	;
 
-abstractActionDefinition
+abstractActionDefinition 
 
 
 	:	'ABSTRACT'
-		(
-			(
-				( 	'CASE'
-			 	|	'MULTI'
+		( 
+			( 	
+				( 	'CASE' 
+			 	|	'MULTI'	
 			 	) ( abstractExclusiveOverrideOption )?
 			)
 		|	( 'LIST'  ( abstractCaseAddOption  )?
@@ -1167,16 +1213,16 @@ abstractActionDefinition
 		 classIdList
 		')')?
 	;
+	
+overridePropertyDefinition 
 
-overridePropertyDefinition
 
-
-	:	( ( 'OVERRIDE') | ( 'EXCLUSIVE' ))
-	 nonEmptyPropertyExpressionList
+	:	( ( 'OVERRIDE') | ( 'EXCLUSIVE' )) 
+	 nonEmptyPropertyExpressionList 
 	;
 
 
-ifElsePropertyDefinition
+ifElsePropertyDefinition 
 
 
 	:	'IF' propertyExpression
@@ -1185,143 +1231,164 @@ ifElsePropertyDefinition
 	;
 
 
-maxPropertyDefinition
+maxPropertyDefinition 
 
 
 	:	( ( 'MAX')  | ( 'MIN'))
-	 nonEmptyPropertyExpressionList
+	 nonEmptyPropertyExpressionList	
 	;
 
 
-casePropertyDefinition
+casePropertyDefinition 
 
 
 	:	'CASE' ( exclusiveOverrideOption )?
 			(  caseBranchBody  )+
 			( 'ELSE' propertyExpression )?
 	;
-
-
-caseBranchBody
-	:	'WHEN' propertyExpression
-		'THEN' propertyExpression
+	
+	
+caseBranchBody 
+	:	'WHEN' propertyExpression 
+		'THEN' propertyExpression 
 	;
 
-multiPropertyDefinition
+multiPropertyDefinition 
 
 
-	:	'MULTI'
-	 nonEmptyPropertyExpressionList
-		( exclusiveOverrideOption )?
+	:	'MULTI' 
+	 nonEmptyPropertyExpressionList 
+		( exclusiveOverrideOption )? 
 	;
 
-recursivePropertyDefinition
+recursivePropertyDefinition 
 
 
 	:	'RECURSION'
 	 propertyExpression
 		'STEP'
-
+		
 	 propertyExpression
-		( 'CYCLES'
-			( 	'YES'
-			|	'NO'
-			|	'IMPOSSIBLE'
+		( 'CYCLES' 
+			( 	'YES' 
+			|	'NO'  
+			|	'IMPOSSIBLE' 
 			)
 		)?
 	;
 
-structCreationPropertyDefinition
+structCreationPropertyDefinition 
 
 	:	'STRUCT'
 		'('
 	 nonEmptyPropertyExpressionList
-		')'
+		')' 
 	;
 
-castPropertyDefinition
+castPropertyDefinition 
 
-	:   PRIMITIVE_TYPE '(' propertyExpression ')'
+	:   primitiveType '(' propertyExpression ')'
 	;
 
-concatPropertyDefinition
+concatPropertyDefinition 
 
 	:   'CONCAT' stringLiteral ',' nonEmptyPropertyExpressionList
 	;
 
-sessionPropertyDefinition
+jsonFormPropertyDefinition 
 
 
-	:	( 	'PREV'
-		| 	'CHANGED'
-		| 	'SET'
-		| 	'DROPPED'
-		| 	'SETCHANGED'
-		|	'DROPCHANGED'
-		| 	'SETDROPPED'
+	:   'JSON' '(' mappedForm 
+            (  contextFiltersClause )?
+        ')'
+
+	;
+
+jsonPropertyDefinition 
+
+
+	:	'JSON'
+		'FROM' nonEmptyAliasedPropertyExpressionList
+		( 'WHERE' propertyExpression)?
+		( 'ORDER' propertyExpressionWithOrder 
+        	( ',' propertyExpressionWithOrder  )*
+        )?
+	;
+
+sessionPropertyDefinition 
+
+
+	:	( 	'PREV'  
+		| 	'CHANGED' 
+		| 	'SET' 
+		| 	'DROPPED' 
+		| 	'SETCHANGED' 
+		|	'DROPCHANGED' 
+		| 	'SETDROPPED' 
 		)
 		'('
-	 propertyExpression
+	 propertyExpression 
 		')'
 	;
 
-signaturePropertyDefinition
+signaturePropertyDefinition 
 
-	: 	'CLASS' '(' propertyExpression ')'
+	: 	'ISCLASS' '(' propertyExpression ')'
 	;
 
-activeTabPropertyDefinition
+activeTabPropertyDefinition 
 
 	: 	'ACTIVE' 'TAB'  formComponentID
 	;
 
-roundPropertyDefinition
+roundPropertyDefinition 
 
 	:	'ROUND' '(' propertyExpression ( ','  propertyExpression )? ')'
 	;
 
-formulaPropertyDefinition
+formulaPropertyDefinition 
 
 
 	:	'FORMULA'
 		( 'NULL' )?
 		( classId )?
 	 formulaPropertySyntaxList
+		( 'NULL' )?
 	;
 
-formulaPropertySyntaxList
-	: formulaPropertySyntaxType stringLiteral
+formulaPropertySyntaxList 
+	: formulaPropertySyntaxType stringLiteral 
 		( ',' formulaPropertySyntaxType stringLiteral )*
 	;
 
-formulaPropertySyntaxType
-	:	( 'PG'  | 'MS' )?
+formulaPropertySyntaxType 
+	:	( 'PG'  | 'MS' )? 
 	;
 
-groupObjectPropertyDefinition
+groupObjectPropertyDefinition 
 
 
 	:	( 'FILTER'  | 'ORDER'  | 'VIEW'  )
 	 formGroupObjectID
 	;
+	
+reflectionPropertyDefinition 
 
-reflectionPropertyDefinition
 
-
-	:	'REFLECTION' reflectionPropertyType  actionOrPropertyUsage
+	:	'REFLECTION' reflectionPropertyType  actionOrPropertyUsage 
+	;
+	
+reflectionPropertyType 
+	:	'CANONICALNAME' 
 	;
 
-reflectionPropertyType
-	:	'CANONICALNAME'
-	;
-
-readActionDefinitionBody
+readActionDefinitionBody 
 
 
 	:	'READ' ( 'CLIENT'  ( 'DIALOG' )? )? propertyExpression ( 'TO' propertyUsage)?
 	;
 
-writeActionDefinitionBody
+writeActionDefinitionBody 
 
 
 	:	'WRITE' ( 'CLIENT'  ( 'DIALOG' )? )? propertyExpression
@@ -1329,44 +1396,44 @@ writeActionDefinitionBody
 
 	;
 
-importActionDefinitionBody
+importActionDefinitionBody 
 
 
-	:	'IMPORT'
+	:	'IMPORT' 
 		(  importSourceFormat  )?
-		'FROM' propertyExpression
-		(
+		'FROM' propertyExpression 
+		( 
             'FIELDS' ( '(' typedParameterList  ')')?
-
-             nonEmptyImportFieldDefinitions
+            
+             nonEmptyImportFieldDefinitions 
             doInputBody
             |
 		    'TO' ( '(' classIdList  ')')?
-
-		     nonEmptyPropertyUsageListWithIds
+             
+		     nonEmptyPropertyUsageListWithIds 
 		    ( 'WHERE' propertyUsage)?
 		)
 	;
 
-nonEmptyImportFieldDefinitions
+nonEmptyImportFieldDefinitions 
 
-	:  importFieldDefinition
+	:  importFieldDefinition 
 		( ','  importFieldDefinition )*
 	;
 
-importFieldDefinition
+importFieldDefinition 
 
     :
-        PRIMITIVE_TYPE
+        primitiveType 
         ( ID EQ)?
-        (    ID
-        | stringLiteral
+        (    ID 
+        | stringLiteral 
         )
         ( 'NULL'  )?
-
+        
     ;
 
-exportActionDefinitionBody
+exportActionDefinitionBody 
 
 
 	:	'EXPORT'
@@ -1374,63 +1441,63 @@ exportActionDefinitionBody
 		( 'TOP'  intLiteral)?
 		'FROM' nonEmptyAliasedPropertyExpressionList
 		( 'WHERE' propertyExpression)?
-		( 'ORDER' propertyExpressionWithOrder
+		( 'ORDER' propertyExpressionWithOrder 
         	( ',' propertyExpressionWithOrder  )*
         )?
 		( 'TO' propertyUsage)?
 	;
 
-propertyExpressionWithOrder
+propertyExpressionWithOrder 
 	: propertyExpression  ( 'DESC' )?
 	;
 
-nonEmptyAliasedPropertyExpressionList
+nonEmptyAliasedPropertyExpressionList 
 
     :
-        exportAliasedPropertyExpression
+        exportAliasedPropertyExpression 
 		( ',' exportAliasedPropertyExpression  )*
 	;
 
-exportAliasedPropertyExpression
+exportAliasedPropertyExpression 
     :
-        (
-          (    ID
-          |	  stringLiteral
+        (  
+          (    ID 
+          |	  stringLiteral 
           )
           EQ
         )?
-        propertyExpression
+        propertyExpression 
     ;
 
-importFormActionDefinitionBody
+importFormActionDefinitionBody 
 
 
 	:	'IMPORT'
-	    ( ID '.')? ID
+	    ( ID '.')? ID 
 	    (  importSourceFormat  )?
 	    ( 'FROM' importFormPropertyExpressions)?
 	;
 
-importFormPropertyExpressions
+importFormPropertyExpressions 
 
-	:  importAliasedPropertyExpression
+	:  importAliasedPropertyExpression 
 		( ',' ID  EQ  propertyExpression  )*
 	;
 
-importAliasedPropertyExpression
+importAliasedPropertyExpression 
     :
-        (
+        (  
           (  ID  )
           EQ
         )?
-        propertyExpression
+        propertyExpression 
     ;
 
-newThreadActionDefinitionBody
+newThreadActionDefinitionBody 
 
 
 	:	'NEWTHREAD' keepContextFlowActionDefinitionBody
-	    (
+	    ( 
 	    	(    'CONNECTION' propertyExpression
 		    |   'SCHEDULE' ( 'PERIOD' propertyExpression)? ( 'DELAY' propertyExpression)?
     	    )
@@ -1438,88 +1505,93 @@ newThreadActionDefinitionBody
         )?
 	;
 
-newExecutorActionDefinitionBody
+newExecutorActionDefinitionBody 
 
 
 	:	'NEWEXECUTOR' keepContextFlowActionDefinitionBody 'THREADS' propertyExpression ';'
 	;
 
-newSessionActionDefinitionBody
+newSessionActionDefinitionBody 
 
 
-	:	( 	'NEWSESSION' ( 'NEWSQL' )? ( nestedPropertiesSelector )?
-		|	'NESTEDSESSION'
+	:	( 	'NEWSESSION' ( 'NEWSQL' )?
+	        ( 'FORMS' ( nonEmptyCompoundIdList ) )?
+	        ( nestedPropertiesSelector )?
+
+		|	'NESTEDSESSION' 
 		)
 		( 'SINGLE' )?
 	 keepContextFlowActionDefinitionBody
 	;
 
-nonEmptyPropertyUsageListWithIds
+nonEmptyPropertyUsageListWithIds 
 
-	:  propertyUsageWithId
+	:  propertyUsageWithId 
 		( ','  propertyUsageWithId )*
 	;
 
-propertyUsageWithId
-	: propertyUsage
+propertyUsageWithId 
+	: propertyUsage 
 		( 	EQ
-			(  ID
-			| stringLiteral
+			(  ID 
+			| stringLiteral 
 			)
 		)?
 	;
 
-importSourceFormat
-	:	'CSV'	 (
+importSourceFormat  
+	:	'CSV'	 ( 
 	            (  stringLiteral )?
 	            (  hasHeaderOption )?
 	            (  noEscapeOption )?
 	            ( 'WHERE'  propertyExpression )?
 	            ( 'CHARSET'  stringLiteral )?
 	            )
-    |	'DBF'	 (
+    |	'DBF'	 ( 
                 ( 'MEMO'  propertyExpression )?
                 ( 'WHERE'  propertyExpression )?
                 ( 'CHARSET'  stringLiteral )?
                 )
-    |   'XLS' 	 (
+    |   'XLS' 	 ( 
                 (  hasHeaderOption )?
                 ( 'SHEET' ( (  propertyExpression ) | ( 'ALL' )) )?
                 ( 'WHERE'  propertyExpression )?
                 )
-	|	'JSON'	 (
+	|	'JSON'	 ( 
 	            ( 'ROOT'  propertyExpression )?
+	            ( 'WHERE'  propertyExpression )?
 	            ( 'CHARSET'  stringLiteral )?
 	            )
-	|	'XML'	 (
+	|	'XML'	 ( 
 	            ( 'ROOT'  propertyExpression )?
 	            ( 'ATTR' )?
+	            ( 'WHERE'  propertyExpression )?
 	            )
-	|	'TABLE'	 (
+	|	'TABLE'	 ( 
 	            ( 'WHERE'  propertyExpression )?
 	            )
 	;
 
-propertyUsage
+propertyUsage 
 
 
 	: propertyName  ( '[' signatureClassList ']' )?
 	;
 
-inlineProperty
+inlineProperty 
 
 
-	:	'[' 	(  contextIndependentPD
-				|   propertyExpressionOrContextIndependent
+	:	'[' 	(  contextIndependentPD 
+				|   propertyExpressionOrContextIndependent 
 				)
 		']'
 	;
 
-propertyName
-	: compoundID
+propertyName 
+	: compoundID 
 	;
 
-propertyOptions
+propertyOptions 
 	:	recursivePropertyOptions
 	;
 
@@ -1528,7 +1600,7 @@ recursivePropertyOptions
 	|	nonSemiPropertyOption recursivePropertyOptions?
 	;
 
-actionOptions
+actionOptions 
 	:	recursiveActionOptions
 	;
 
@@ -1538,47 +1610,47 @@ recursiveActionOptions
 	;
 
 semiActionOrPropertyOption
-    :	inSetting
-	|	viewTypeSetting
-	|	customViewSetting
-	|	flexCharWidthSetting
-	|	charWidthSetting
-	|	changeKeySetting
-	|	changeMouseSetting
-	|   '@@'  ID
+    :	inSetting 
+	|	viewTypeSetting 
+	|	customViewSetting 
+	|	flexCharWidthSetting 
+	|	charWidthSetting 
+	|	changeKeySetting 
+	|	changeMouseSetting 
+	|	stickySetting 
+	|	syncSetting 
+	|   imageSetting 
+	|   '@@'  ID 
     ;
 
 semiPropertyOption
     :	semiActionOrPropertyOption
-    |   persistentSetting
-	|	complexSetting
-	|	prereadSetting
-	|	hintSettings
-	|	tableSetting
-	|   defaultCompareSetting
-	|	autosetSetting
-	|	regexpSetting
-	|	loggableSetting
-	|	echoSymbolsSetting
-	|	indexSetting
-	|	setNotNullSetting
-	|	aggrSetting
-	|	eventIdSetting
-	|	stickySetting
+    |   persistentSetting 
+	|	complexSetting 
+	|	prereadSetting 
+	|	hintSettings 
+	|	tableSetting 
+	|   defaultCompareSetting 
+	|	autosetSetting 
+	|	regexpSetting 
+	|	echoSymbolsSetting 
+	|	indexSetting 
+	|	setNotNullSetting 
+	|	aggrSetting 
+	|	eventIdSetting 
     ;
 
 semiActionOption
     :	semiActionOrPropertyOption
-    |   imageSetting
-	|	shortcutSetting
-	|	asonEventActionSetting
-	|	confirmSetting
+	|	shortcutSetting 
+	|	asonEventActionSetting 
+	|	confirmSetting 
     ;
 
 nonSemiActionOrPropertyOption
-    :	onEditEventSetting
-    |	onContextMenuEventSetting
-    |	onKeyPressEventSetting
+    :	onEditEventSetting 
+    |	onContextMenuEventSetting 
+    |	onKeyPressEventSetting 
     ;
 
 nonSemiPropertyOption
@@ -1589,78 +1661,70 @@ nonSemiActionOption
     :   nonSemiActionOrPropertyOption
     ;
 
-inSetting
-	:	'IN' compoundID
+inSetting 
+	:	'IN' compoundID 
 	;
 
-persistentSetting
-	:	'MATERIALIZED'
+persistentSetting 
+	:	'MATERIALIZED' ( stringLiteral)? 
 	;
 
-complexSetting
+complexSetting 
 	:	( 'COMPLEX'  | 'NOCOMPLEX'  )
 	;
 
-prereadSetting
-	:	'PREREAD'
+prereadSetting 
+	:	'PREREAD' 
 	;
 
-hintSettings
+hintSettings 
 	:	( 'HINT'  | 'NOHINT'  )
 	;
 
-tableSetting
-	:	'TABLE'  compoundID
+tableSetting 
+	:	'TABLE'  compoundID 
 	;
 
-loggableSetting
-	:	'LOGGABLE'
-	;
-
-aggrSetting
+aggrSetting 
 
     :
         'AGGR'
     ;
 
-setNotNullSetting
-    :   notNullSetting
+setNotNullSetting 
+    :   notNullSetting 
     ;
-annotationSetting
-	:
-	    '@@'  ID
-	;
 
-notNullSetting
+notNullSetting 
 
 	:	'NONULL'
+	    baseEventNotPE 
 	    (  notNullDeleteSetting )?
-	    baseEvent
 	;
 
 
-shortcutSetting
+shortcutSetting 
 
 	:	'ASON' 'CONTEXTMENU' ( localizedStringLiteralNoID)?  actionOrPropertyUsage
 	;
 
-asonEventActionSetting
+asonEventActionSetting 
 
 
 	:	'ASON' formEventType actionOrPropertyUsage
 	;
 
-viewTypeSetting
+viewTypeSetting 
 
 	: propertyClassViewType
 	;
 
-customViewSetting
+customViewSetting 
 
 	: propertyCustomView
 	;
 
-flexCharWidthSetting
+flexCharWidthSetting 
 
 
 	:	'CHARWIDTH'  intLiteral
@@ -1669,23 +1733,23 @@ flexCharWidthSetting
         )
 	;
 
-charWidthSetting
+charWidthSetting 
 
 	:	'CHARWIDTH'  intLiteral
 	;
 
-imageSetting
+imageSetting 
 
-	:	'IMAGE'  stringLiteral
+	:   imageStatement
 	;
 
-defaultCompareSetting
+defaultCompareSetting 
 
 	:	'DEFAULTCOMPARE'  stringLiteral
 	;
 
 
-changeKeySetting
+changeKeySetting 
 
 
 	:	'CHANGEKEY'  stringLiteral
@@ -1694,7 +1758,7 @@ changeKeySetting
 		)?
 	;
 
-changeMouseSetting
+changeMouseSetting 
 
 
 	:	'CHANGEMOUSE'  stringLiteral
@@ -1703,414 +1767,460 @@ changeMouseSetting
 		)?
 	;
 
-autosetSetting
+autosetSetting 
 
 
-	:	'AUTOSET'
+	:	'AUTOSET' 
 	;
 
-confirmSetting
+confirmSetting 
 
 
-	:	'CONFIRM'
+	:	'CONFIRM' 
 	;
 
-regexpSetting
+regexpSetting 
 
 
 	:	'REGEXP'  stringLiteral
 		(  stringLiteral )?
 	;
 
-echoSymbolsSetting
+echoSymbolsSetting 
 
 	:	'ECHO'
 	;
 
-indexSetting
+indexSetting 
 
 
-	:	'INDEXED' ( ( 'LIKE' ) | ( 'MATCH' ))?
+	:	'INDEXED' ( stringLiteral)? ( ( 'LIKE' ) | ( 'MATCH' ))?
 	;
 
-notNullDeleteSetting
+notNullDeleteSetting 
 
     :   'DELETE'
+        baseEventNotPE 
 	;
 
-onEditEventSetting
+onEditEventSetting 
 
 	:	'ON' formEventType
 	 listTopContextDependentActionDefinitionBody
 	;
 
-formEventType
-	:	'CHANGE'
-	|	'CHANGEWYS'
-	|	'EDIT'
-	|	'GROUPCHANGE'
+formEventType 
+	:	'CHANGE' 
+	|	'CHANGEWYS' 
+	|	'EDIT' 
+	|	'GROUPCHANGE' 
 	;
 
-onContextMenuEventSetting
+onContextMenuEventSetting 
 
 	:	'ON' 'CONTEXTMENU' ( localizedStringLiteralNoID)?
 	 listTopContextDependentActionDefinitionBody
 	;
 
-onKeyPressEventSetting
+onKeyPressEventSetting 
 
 	: 'ON' 'KEYPRESS' stringLiteral listTopContextDependentActionDefinitionBody
 	;
 
-eventIdSetting
+eventIdSetting 
 
 	:	'EVENTID' stringLiteral
 	;
 
-stickySetting
+stickySetting 
 
 
     :
-         stickyOption
+         stickyOption 
     ;
 
-stickyOption
-	:	'STICKY'  | 'NOSTICKY'
+stickyOption 
+	:	'STICKY'  | 'NOSTICKY' 
+	;
+
+syncSetting 
+
+
+    :
+         syncTypeLiteral 
+    ;
+
+
+
+
+
+
+listTopContextDependentActionDefinitionBody 
+
+
+    :   listActionDefinitionBody 
+	;
+
+endDeclTopContextDependentActionDefinitionBody 
+    :   topContextDependentActionDefinitionBody 
 	;
 
 
+topContextDependentActionDefinitionBody 
 
-
-
-
-listTopContextDependentActionDefinitionBody
-
-
-    :   listActionDefinitionBody
-	;
-
-endDeclTopContextDependentActionDefinitionBody
-    :   topContextDependentActionDefinitionBody
+    :   modifyContextFlowActionDefinitionBody 
 	;
 
 
-topContextDependentActionDefinitionBody
+modifyContextFlowActionDefinitionBody 
 
-    :   modifyContextFlowActionDefinitionBody
+    : actionDefinitionBody 
 	;
 
-
-modifyContextFlowActionDefinitionBody
-
-    : actionDefinitionBody
+keepContextFlowActionDefinitionBody 
+    : actionDefinitionBody 
 	;
 
-keepContextFlowActionDefinitionBody
-    : actionDefinitionBody
-	;
-
-actionDefinitionBody
+actionDefinitionBody 
 
 
-	:	(    recursiveContextActionDB
-	    | leafContextActionDB
+	:	(    recursiveContextActionDB	
+	    | leafContextActionDB	
 	    )
 	;
 
 
-recursiveContextActionDB
-	:	(    recursiveExtendContextActionDB
-	    | recursiveKeepContextActionDB
+recursiveContextActionDB 
+	:	(    recursiveExtendContextActionDB	
+	    | recursiveKeepContextActionDB	
 	    )
 ;
 
-recursiveExtendContextActionDB
+recursiveExtendContextActionDB 
 
-	: forActionDefinitionBody
-	| dialogActionDefinitionBody
-	| inputActionDefinitionBody
-	| newActionDefinitionBody
-	| recalculateActionDefinitionBody
+	: forActionDefinitionBody 
+	| dialogActionDefinitionBody  
+	| inputActionDefinitionBody  
+	| newActionDefinitionBody 
+	| recalculateActionDefinitionBody 
 	;
 
-recursiveKeepContextActionDB
-	: listActionDefinitionBody
-	| confirmActionDefinitionBody
-	| importActionDefinitionBody
-	| newSessionActionDefinitionBody
-	| requestActionDefinitionBody
-	| tryActionDefinitionBody
-	| ifActionDefinitionBody
-	| caseActionDefinitionBody
-	| multiActionDefinitionBody
-	| applyActionDefinitionBody
-    |   newThreadActionDefinitionBody
-	| newExecutorActionDefinitionBody
+recursiveKeepContextActionDB 
+	: listActionDefinitionBody 
+	| confirmActionDefinitionBody  
+	| importActionDefinitionBody  
+	| newSessionActionDefinitionBody 
+	| requestActionDefinitionBody 
+	| tryActionDefinitionBody  
+	| ifActionDefinitionBody 
+	| caseActionDefinitionBody 
+	| multiActionDefinitionBody 
+	| applyActionDefinitionBody 
+    |   newThreadActionDefinitionBody  
+	| newExecutorActionDefinitionBody  
 ;
 
 
-leafContextActionDB
-	:	(    leafExtendContextActionDB
-	    | leafKeepContextActionDB
+leafContextActionDB 
+	:	(    leafExtendContextActionDB	
+	    | leafKeepContextActionDB	
 	    ) ';'
 ;
 
-leafExtendContextActionDB
+leafExtendContextActionDB 
 
 
-
-	: changeOrExecActionDefinitionBody
-	| changeClassActionDefinitionBody
-	| deleteActionDefinitionBody
-	| newWhereActionDefinitionBody
+	
+	: changeOrExecActionDefinitionBody 
+	| changeClassActionDefinitionBody 
+	| deleteActionDefinitionBody 
+	| newWhereActionDefinitionBody 
 	;
 
-leafKeepContextActionDB
-	: terminalFlowActionDefinitionBody
-	|   cancelActionDefinitionBody
-	| formActionDefinitionBody
-	| printActionDefinitionBody
-	| exportFormActionDefinitionBody
-	| exportActionDefinitionBody
-	| messageActionDefinitionBody
-	| asyncUpdateActionDefinitionBody
-	| seekObjectActionDefinitionBody
-	| expandGroupObjectActionDefinitionBody
-	| collapseGroupObjectActionDefinitionBody
-	| emailActionDefinitionBody
-	| evalActionDefinitionBody
-	| drillDownActionDefinitionBody
-	| readActionDefinitionBody
-	| writeActionDefinitionBody
-	| importFormActionDefinitionBody
-	| activeFormActionDefinitionBody
-	| activateActionDefinitionBody
-    |   externalActionDefinitionBody
-	| emptyActionDefinitionBody
+leafKeepContextActionDB 
+	: terminalFlowActionDefinitionBody 
+	|   cancelActionDefinitionBody 
+	| formActionDefinitionBody 
+	| printActionDefinitionBody 
+	| exportFormActionDefinitionBody 
+	| exportActionDefinitionBody 
+	| messageActionDefinitionBody 
+	| asyncUpdateActionDefinitionBody 
+	| seekObjectActionDefinitionBody 
+	| expandGroupObjectActionDefinitionBody 
+	| collapseGroupObjectActionDefinitionBody 
+	| emailActionDefinitionBody 
+	| evalActionDefinitionBody 
+	| readActionDefinitionBody 
+	| writeActionDefinitionBody 
+	| importFormActionDefinitionBody 
+	| activeFormActionDefinitionBody 
+	| activateActionDefinitionBody 
+	| closeFormActionDefinitionBody 
+	| expandCollapseActionDefinitionBody 
+    |   internalContextActionDefinitionBody 
+    |   externalActionDefinitionBody 
+    |   showRecDepActionDefinitionBody 
+	| emptyActionDefinitionBody 
 	;
 
-contextIndependentActionDB
+contextIndependentActionDB 
 
 
-	: internalActionDefinitionBody
-    | abstractActionDefinition
+	: internalActionDefinitionBody 
+    | abstractActionDefinition  
 	;
 
-mappedForm
+mappedForm 
 
 	:
-	(
-		(  compoundID
+	( 
+		(  compoundID 
 			( 'OBJECTS' formActionObjectList )?
-
+			
 		)
 	    |
 	    ( 	( 'LIST' | ( 'EDIT'  ))
-		  classId
+		  classId 
 			( formActionProps )
-
+			
 		)
 	)
 ;
 
 
-emptyActionDefinitionBody
+emptyActionDefinitionBody 
 
     :
     ;
 
-formActionDefinitionBody
+formActionDefinitionBody 
 
 
-	:	'SHOW' mappedForm
+	:	'SHOW' (  stringLiteral  '=' )? mappedForm
+	    
+		( 
+		     contextFiltersClause 
+		|    syncTypeLiteral 
+		|    windowTypeLiteral 
 
-		(
-		     contextFiltersClause
-		|    syncTypeLiteral
-		|    windowTypeLiteral
+        | manageSessionClause 
+		| noCancelClause 
+		| formSessionScopeClause 
 
-        | manageSessionClause
-		| noCancelClause
-		| formSessionScopeClause
-
-		|	'READONLY'
-		|	'CHECK'
+		|	'READONLY' 
+		|	'CHECK' 
 		)*
 	;
 
-dialogActionDefinitionBody
+dialogActionDefinitionBody 
 
 
 	:	'DIALOG' mappedForm
+	    
+		(     contextFiltersClause 
+		|    windowTypeLiteral 
+		| manageSessionClause 
+		| noCancelClause 
+		| formSessionScopeClause 
 
-		(     contextFiltersClause
-		|    windowTypeLiteral
-		| manageSessionClause
-		| noCancelClause
-		| formSessionScopeClause
-
-		|	'READONLY'
-		|	'CHECK'
+		|	'READONLY' 
+		|	'CHECK' 
 		)*
 	 doInputBody
 	;
 
-manageSessionClause
-    :	'MANAGESESSION'
-	|	'NOMANAGESESSION'
+manageSessionClause 
+    :	'MANAGESESSION' 
+	|	'NOMANAGESESSION' 
     ;
 
-formSessionScopeClause
-    :	'NEWSESSION'
-	|	'NESTEDSESSION'
-	|   'THISSESSION'
+formSessionScopeClause 
+    :	'NEWSESSION' 
+	|	'NESTEDSESSION' 
+	|   'THISSESSION' 
     ;
 
-noCancelClause
-    :	'CANCEL'
-	|	'NOCANCEL'
+noCancelClause 
+    :	'CANCEL' 
+	|	'NOCANCEL' 
     ;
 
-doInputBody
-
+doInputBody 
+        
     :	( ( 'DO' modifyContextFlowActionDefinitionBody  ) ( 'ELSE' keepContextFlowActionDefinitionBody  )?)
 	|	';'
 ;
 
-syncTypeLiteral
-	:	'WAIT'
-	|	'NOWAIT'
+syncTypeLiteral 
+	:	'WAIT' 
+	|	'NOWAIT' 
 	;
 
-windowTypeLiteral
-	:	'FLOAT'
-	|	'DOCKED'
+windowTypeLiteral 
+	:	'FLOAT' 
+	|	'DOCKED' 
+	|	'EMBEDDED' 
+	|	'POPUP' 
+	|   'IN'  formComponentID 
 	;
 
-printActionDefinitionBody
+printActionDefinitionBody 
 
 
-	:	'PRINT' mappedForm
+	:	'PRINT' ( 'CLIENT' | 'SERVER' )?
+	    mappedForm 
         (  contextFiltersClause )?
-		(    (
-            (    'XLS'   ( 'SHEET'  propertyExpression )? ( 'PASSWORD'  propertyExpression )?
-            |	'XLSX'  ( 'SHEET'  propertyExpression )? ( 'PASSWORD'  propertyExpression )?
-            |	'PDF'
-            |	'DOC'
-            |	'DOCX'
-            |	'RTF'
-            |	'HTML'
-            )
-            ( 'TO' propertyUsage)?
-            )
-        |   (
-                'MESSAGE'
+        ( 
+            (  
+                'MESSAGE' 
                 (  syncTypeLiteral )?
                 ( 'TOP'  intLiteral  )?
             )
-        |   (
-
-            (    'PREVIEW'
-            |   'NOPREVIEW'
-            )?
-		    (  syncTypeLiteral )?
-            ( 'TO'  propertyExpression )?
+            |
+            (  
+                
+                (  
+                     printType  
+                    ( 'TO' propertyUsage)?
+                )?
+                (  'PREVIEW' | 'NOPREVIEW'  )?
+                (  syncTypeLiteral )?
+                ( 'TO'  propertyExpression )?
             )
         )
 	;
 
-exportFormActionDefinitionBody
+printType  
+        :    'XLS'   (  sheetExpression )? ( 'PASSWORD'  propertyExpression )?
+        |	'XLSX'  (  sheetExpression )? ( 'PASSWORD'  propertyExpression )?
+        |	'PDF' 
+        |	'DOC'  
+        |	'DOCX' 
+        |	'RTF' 
+        |	'HTML' 
+        ;
+
+exportFormActionDefinitionBody 
 
 
-	:	'EXPORT' mappedForm
+	:	'EXPORT' mappedForm 
 	    (  contextFiltersClause )?
 		(  exportSourceFormat  )?
-		( 'TOP'  intLiteral)?
+		( 'TOP' ( groupObjectSelectTopMap |  intLiteral))?
 		( 'TO' ( groupObjectPropertyUsageMap | propertyUsage))?
 	;
 
-contextFiltersClause
+contextFiltersClause 
 
-    :   'FILTERS'
-        propertyExpression
+    :   'FILTERS' 
+        propertyExpression 
         ( ',' propertyExpression )*
     ;
 
-exportSourceFormat
+exportSourceFormat  
 	:	'CSV'  (  stringLiteral )? (  hasHeaderOption )? (  noEscapeOption )? ( 'CHARSET'  stringLiteral )?
     |	'DBF'  ( 'CHARSET'  stringLiteral )?
-    |   'XLS'  (  hasHeaderOption )?
-    |   'XLSX'  (  hasHeaderOption )?
+    |   'XLS'  (  sheetExpression )? (  hasHeaderOption )?
+    |   'XLSX'  (  sheetExpression )? (  hasHeaderOption )?
 	|	'JSON'  ( 'CHARSET'  stringLiteral )?
-	|	'XML'  ( 'ROOT'  propertyExpression )? ( 'TAG'  propertyExpression )? ( 'ATTR' )? ( 'CHARSET'  stringLiteral )?
-	|	'TABLE'
+	|	'XML'  (  hasHeaderOption )? ( 'ROOT'  propertyExpression )?
+	                                                 ( 'TAG'  propertyExpression )? ( 'ATTR' )? ( 'CHARSET'  stringLiteral )?
+	|	'TABLE' 
 	;
 
-hasHeaderOption
-    :	'HEADER'
+hasHeaderOption 
+    :	'HEADER' 
     |	'NOHEADER'
 	;
 
-noEscapeOption
-    :	'NOESCAPE'
+noEscapeOption 
+    :	'NOESCAPE' 
     |	'ESCAPE'
 	;
 
-groupObjectPropertyUsageMap
+sheetExpression 
+        :   'SHEET'  propertyExpression 
+        ;
 
-	: ID   EQ propertyUsage
+groupObjectSelectTopMap 
+
+	: ID   EQ intLiteral 
+		( ',' ID  EQ  intLiteral  )*
+	;
+
+groupObjectPropertyUsageMap 
+
+	: ID   EQ propertyUsage 
 		( ',' ID  EQ  propertyUsage  )*
 	;
 
-formActionObjectList
+formActionObjectList 
 
-	: ID  formActionProps
+	: ID  formActionProps 
 		( ',' ID  formActionProps )*
 	;
 
-formActionProps
+formActionProps 
 
 
     :   ( EQ propertyExpression  ( 'NULL'  )? )?
-        (
+        ( 
             (    'INPUT'
                 |
-                (
-
-                'CHANGE'
-                ( EQ propertyExpression)?
+                ( 
+                
+                'CHANGE' 
+                ( EQ propertyExpression)? 
                 ( 'NOCONSTRAINTFILTER'  )?
                 ( 'NOCHANGE'  )?
                 )
             )
-
+            
             ID?
-
-            ( 'NULL' )?
-
+            
+            ( 'NULL' )? 
+            ( 'TO' propertyUsage  )?
             ( ( 'CONSTRAINTFILTER'  ) ( EQ propertyExpression  )?)?
             ( 'LIST' propertyExpression  )?
         )?
     ;
 
-idEqualPEList
+idEqualPEList 
 
-	: ID  EQ propertyExpression   ( 'NULL' )?
+	: ID  EQ propertyExpression   ( 'NULL' )? 
 		( ',' ID  EQ propertyExpression   ( 'NULL' )? )*
 	;
 
-internalActionDefinitionBody
+internalActionDefinitionBody 
+
 
 
 	:	'INTERNAL'
-        (
+	    ( 'CLIENT'  )?
+        (  syncTypeLiteral )?
+        ( 
              stringLiteral ( '(' classIdList ')' )?
 		|    codeLiteral
         )
 	    ( 'NULL' )?
 	;
 
-externalActionDefinitionBody
+internalContextActionDefinitionBody  
+
+
+	:	'INTERNAL'
+	    ( 
+	        (  'DB'  )
+	    |
+	        (  'CLIENT'  (  syncTypeLiteral )? )
+	    )
+         propertyExpression
+        ( 'PARAMS' propertyExpressionList  )?
+        ( 'TO'  nonEmptyPropertyUsageList  )?
+	;
+
+externalActionDefinitionBody  
 
 
 	:	'EXTERNAL'
@@ -2119,42 +2229,42 @@ externalActionDefinitionBody
 	    ( 'TO'  nonEmptyPropertyUsageList)?
 	;
 
-externalFormat
-	:	'SQL'	  propertyExpression  'EXEC'  propertyExpression
+externalFormat  
+	:	'SQL'	  propertyExpression  'EXEC'  propertyExpression 
     |	'TCP'	 ( 'CLIENT' )?
-                 propertyExpression
+                 propertyExpression 
 	|	'UDP'	 ( 'CLIENT' )?
-	             propertyExpression
+	             propertyExpression 
 	|	'HTTP'	 ( 'CLIENT' )?
-	            (  externalHttpMethod )?  propertyExpression
+	            (  externalHttpMethod )?  propertyExpression 
 	            ( 'BODYURL'  propertyExpression )?
-	            ( 'BODYPARAMNAMES' stringLiteral  ( ',' stringLiteral )*)?
+	            ( 'BODYPARAMNAMES' propertyExpression  ( ',' propertyExpression )*)?
                 ( 'BODYPARAMHEADERS'  propertyUsage  ( ','  propertyUsage )*)?
 	            ( 'HEADERS'  propertyUsage )?
 	            ( 'COOKIES'  propertyUsage )?
 	            ( 'HEADERSTO'  propertyUsage )?
 	            ( 'COOKIESTO'  propertyUsage )?
 	|	'DBF'	  propertyExpression  'APPEND' ( 'CHARSET'  stringLiteral )?
-	|	'LSF'	  propertyExpression  ( 'EXEC' | ( 'EVAL'  ( 'ACTION' )? ))  propertyExpression
-	|   'JAVA' 	  propertyExpression
+	|	'LSF'	  propertyExpression  ( 'EXEC' | ( 'EVAL'  ( 'ACTION' )? ))  propertyExpression 
+	|   'JAVA' 	  propertyExpression 
 	;
 
-externalHttpMethod
-	:	'DELETE'
-	|	'GET'
-	|	'POST'
-	|	'PUT'
+externalHttpMethod 
+	:	'DELETE' 
+	|	'GET'    
+	|	'POST'	 
+	|	'PUT'    
 	;
 
-newWhereActionDefinitionBody
+newWhereActionDefinitionBody 
 
 
 	:	'NEW' classId
-		'WHERE' propertyExpression
+		'WHERE' propertyExpression 
 		( 'TO' propertyUsage '(' singleParameterList ')'  )?
 	;
 
-newActionDefinitionBody
+newActionDefinitionBody 
 
 
 	:
@@ -2163,66 +2273,60 @@ newActionDefinitionBody
    	 modifyContextFlowActionDefinitionBody
 	;
 
-emailActionDefinitionBody
+emailActionDefinitionBody 
 
 
 	:	'EMAIL'
 		( 'FROM' propertyExpression  )?
 		( 'SUBJECT' propertyExpression )?
-		(
-		 emailRecipientTypeLiteral
-		 propertyExpression
+		( 
+		 emailRecipientTypeLiteral 
+		 propertyExpression 
 		)+
 		( 'BODY' propertyExpression )?
 		(    'ATTACH'
-		    (
-                ( propertyExpression
-
+		    ( 
+                ( propertyExpression 
+                
                 ( 'NAME' propertyExpression  )?
                 )
             |
                 ( 'LIST'
-                 propertyUsage
-
+                 propertyUsage 
+                
                 ( 'NAME'  propertyUsage )?)
             )
 		)*
 		(  syncTypeLiteral)?
 	;
 
-emailActionFormObjects
-
-
-	:	( 	'OBJECTS'
-		 ID EQ propertyExpression
-			( ',' ID EQ propertyExpression )*
-		)?
-	;
-
-confirmActionDefinitionBody
+confirmActionDefinitionBody 
 
 
 	:	'ASK'
         propertyExpression
-
+        
 	    ( ( ID  EQ)? 'YESNO'  )?
         doInputBody
 	;
-
-messageActionDefinitionBody
+		
+messageActionDefinitionBody 
 
 
 	:	'MESSAGE'
 	    propertyExpression
-	    (  syncTypeLiteral )?
+	    ( 
+	         syncTypeLiteral 
+	    |   'LOG' 
+        )*
 	;
 
-asyncUpdateActionDefinitionBody
+asyncUpdateActionDefinitionBody 
 
 	:	'ASYNCUPDATE' propertyExpression
 	;
 
-seekObjectActionDefinitionBody
+seekObjectActionDefinitionBody 
 
 
 	:	'SEEK' ( 'FIRST'  | 'LAST'  | 'NULL' )?
@@ -2231,128 +2335,158 @@ seekObjectActionDefinitionBody
 		)
 	;
 
-seekObjectsList
-	: idEqualPEList
+seekObjectsList 
+	: idEqualPEList 
 	;
 
-expandGroupObjectActionDefinitionBody
+expandGroupObjectActionDefinitionBody 
 
 
 	:	'EXPAND' ( 'DOWN'  | 'UP'  | ( 'ALL'  ( 'TOP' )?) )?
 	 formGroupObjectID ( 'OBJECTS' expandCollapseObjectsList )?
 	;
 
-collapseGroupObjectActionDefinitionBody
+collapseGroupObjectActionDefinitionBody 
 
 
 	:	'COLLAPSE' ( 'DOWN'  | ( 'ALL'  ( 'TOP' )?) )?
 	 formGroupObjectID ( 'OBJECTS' expandCollapseObjectsList )?
 	;
 
-expandCollapseObjectsList
-	: idEqualPEList
+expandCollapseObjectsList 
+	: idEqualPEList 
 	;
 
-changeClassActionDefinitionBody
+changeClassActionDefinitionBody 
 
 
-	:	'CHANGECLASS' propertyExpression 'TO' classId
+	:	'CHANGECLASS' propertyExpression 'TO' classId 
 		( 'WHERE' propertyExpression )?
-	;
+	;  
 
-deleteActionDefinitionBody
+deleteActionDefinitionBody 
 
 
-	:	'DELETE' propertyExpression
+	:	'DELETE' propertyExpression 
 		( 'WHERE' propertyExpression )?
-	;
+	;  
 
-evalActionDefinitionBody
+evalActionDefinitionBody 
 
 
 	:	'EVAL' ( 'ACTION' )? propertyExpression ( 'PARAMS' propertyExpressionList)?
 	;
 
-drillDownActionDefinitionBody
-
-	:	'DRILLDOWN' propertyExpression
-	;
-
-requestActionDefinitionBody
+requestActionDefinitionBody 
 
 	:	'REQUEST' keepContextFlowActionDefinitionBody 'DO' keepContextFlowActionDefinitionBody
 	    ( 'ELSE' keepContextFlowActionDefinitionBody)?
 	;
 
-inputActionDefinitionBody
+inputActionDefinitionBody 
 
 
 	:	'INPUT'
 	    mappedInput
-        (
-            'CHANGE'
-            ( EQ propertyExpression)?
+        (  
+            'CHANGE' 
+            ( EQ propertyExpression)? 
             ( 'NOCONSTRAINTFILTER'  )?
             ( 'NOCHANGE'  )?
         )?
-
+        
+        ( 'CUSTOM' stringLiteral )?
 	    ( 'LIST' propertyExpression )?
         ( 'WHERE' propertyExpression )?
+        (  contextActions )?
         formSessionScopeClause?
-
+		( 'TO' propertyUsage  )?
         doInputBody
 	;
 
-mappedInput
+contextActions 
+	:
+	'ACTIONS'  contextAction 
+	( ','  contextAction )*
+	;
+
+contextAction 
+	:
+ stringLiteral  ( 'KEYPRESS' stringLiteral )?
+	          ( 'TOOLBAR' ( quickAccess )*)? listActionDefinitionBody 
+	;
+
+quickAccess 
+	:
+	( 'ALL'  | 'SELECTED'  | 'FOCUSED' ) ( 'HOVER' )?
+	;
+
+mappedInput 
 
 
-    :
-    (
+    :    
+    ( 
         ( ID EQ  )?
-        PRIMITIVE_TYPE
+        primitiveType
     )
-    |
-    (
+    |	
+    (  
         ( ID  )?
         EQ propertyExpressionOrCompoundID
     )
 ;
 
-activeFormActionDefinitionBody
+activeFormActionDefinitionBody 
 
-	:	'ACTIVE' 'FORM' compoundID
+	:	'ACTIVE' 'FORM' compoundID 
 	;
 
-activateActionDefinitionBody
+activateActionDefinitionBody 
 
 
 	:	'ACTIVATE'
-		( 	'FORM' compoundID
-		|	'TAB'  formComponentID
-		|   'PROPERTY'  formPropertyID
+		( 	'FORM' compoundID 
+		|	'TAB'  formComponentID 
+		|   'PROPERTY'  formPropertyID 
 		)
 	;
 
-listActionDefinitionBody
+closeFormActionDefinitionBody 
+
+
+	:	'CLOSE' 'FORM'  stringLiteral 
+	;
+
+expandCollapseActionDefinitionBody 
+
+
+	:	( 	'COLLAPSE'
+		|	'EXPAND' 
+		) 
+		'CONTAINER'
+	  formComponentID 
+	;
+
+listActionDefinitionBody 
 
 
 	:	'{'
 			( 	( keepContextFlowActionDefinitionBody )
-			| localDataPropertyDefinition ';'
+			| localDataPropertyDefinition ';' 
 			)*
 		'}'
 	;
 
-nestedPropertiesSelector
+nestedPropertiesSelector 
     :   'NESTED'
-            (    'LOCAL'
-            |   (
+            (    'LOCAL' 
+            |   ( 
             	'(' nonEmptyPropertyUsageList  ')'
             	)
             )
     ;
-
-localDataPropertyDefinition
+	
+localDataPropertyDefinition 
 
 
 	:	'LOCAL'
@@ -2364,19 +2498,19 @@ localDataPropertyDefinition
 		')'
 	;
 
-changeOrExecActionDefinitionBody
+changeOrExecActionDefinitionBody 
 
 
 	:	( 'CHANGE' | 'EXEC')?
 	 propertyUsage
 		'(' propertyExpressionList ')'
-		( '<-'
-	 propertyExpression
+		( '<-' 
+	 propertyExpression 
 		( 'WHERE'
 	 propertyExpression )?)?
 	;
 
-recalculateActionDefinitionBody
+recalculateActionDefinitionBody 
 
 
 	:	'RECALCULATE'
@@ -2386,21 +2520,21 @@ recalculateActionDefinitionBody
 	 propertyExpression )?
 	;
 
-tryActionDefinitionBody
+tryActionDefinitionBody 
 
 	:	'TRY' keepContextFlowActionDefinitionBody
 	    (  'CATCH' keepContextFlowActionDefinitionBody )?
 		(  'FINALLY' keepContextFlowActionDefinitionBody )?
 	;
 
-ifActionDefinitionBody
+ifActionDefinitionBody 
 
-	:	'IF' propertyExpression
+	:	'IF' propertyExpression 
 		'THEN' keepContextFlowActionDefinitionBody
 		( 'ELSE' keepContextFlowActionDefinitionBody)?
 	;
 
-caseActionDefinitionBody
+caseActionDefinitionBody 
 
 
 	:	'CASE' ( exclusiveOverrideOption )?
@@ -2408,54 +2542,54 @@ caseActionDefinitionBody
 			( 'ELSE' keepContextFlowActionDefinitionBody )?
 	;
 
-actionCaseBranchBody
-	:	'WHEN' propertyExpression
-		'THEN' keepContextFlowActionDefinitionBody
+actionCaseBranchBody 
+	:	'WHEN' propertyExpression 
+		'THEN' keepContextFlowActionDefinitionBody 
 	;
 
-applyActionDefinitionBody
+applyActionDefinitionBody 
 
 
-	:	'APPLY'
+	:	'APPLY' 
         ( nestedPropertiesSelector )?
         ( 'SINGLE' )?
         ( 'SERIALIZABLE' )?
         keepContextFlowActionDefinitionBody
 	;
 
-cancelActionDefinitionBody
+cancelActionDefinitionBody 
 
 
 	:	'CANCEL'
         ( nestedPropertiesSelector )?
 	;
 
-multiActionDefinitionBody
+multiActionDefinitionBody 
 
 
 	:	'MULTI' ( exclusiveOverrideOption )?
 	 nonEmptyActionPDBList
 	;
 
-forAddObjClause
+forAddObjClause 
 
 
 	:	'NEW'
 		( ID EQ )?
-	 classId
+	 classId 
         ( 'AUTOSET'  )?
 	;
 
-forActionDefinitionBody
+forActionDefinitionBody 
 
 
-	:	( 	'FOR'
-		| 	'WHILE'
+	:	( 	'FOR' 
+		| 	'WHILE' 
 		)
 	 propertyExpression
 		( 'ORDER'
-			( 'DESC'  )?
-		 nonEmptyPropertyExpressionList
+			( 'DESC'  )? 
+		 nonEmptyPropertyExpressionList 
 		)?
 	  inlineStatement
 		( forAddObjClause)?
@@ -2463,11 +2597,11 @@ forActionDefinitionBody
 		(   'ELSE' keepContextFlowActionDefinitionBody)?
 	;
 
-terminalFlowActionDefinitionBody
+terminalFlowActionDefinitionBody 
 
 
 	:	'BREAK'
-	|	'RETURN'
+	|	'RETURN' 
 	;
 
 
@@ -2476,30 +2610,30 @@ terminalFlowActionDefinitionBody
 
 
 overridePropertyStatement
+ 
 
 
-
-	: propertyUsage
-
-		'(' typedParameterList ')'
+	: propertyUsage 
+	
+		'(' typedParameterList ')' 
         '+='
         ( 'WHEN' propertyExpression 'THEN' )?
-        propertyExpressionOrContextIndependent
+        propertyExpressionOrContextIndependent 
          ';'
 	;
 
 overrideActionStatement
-
+ 
 
 
 	:	'ACTION'?
 	    propertyUsage
-
-		'(' typedParameterList ')'
+	
+		'(' typedParameterList ')' 
         '+'
         ( 'WHEN' propertyExpression 'THEN' )?
-        listTopContextDependentActionDefinitionBody
-
+        listTopContextDependentActionDefinitionBody 
+        
         ( 'OPTIMISTICASYNC'  )?
 	;
 
@@ -2507,18 +2641,18 @@ overrideActionStatement
 
 
 
-constraintStatement
+constraintStatement 
 
 
 	:	'CONSTRAINT'
-	 baseEvent
-
-	 propertyExpression
-		( 'CHECKED'
+	 baseEventPE
+		
+	 propertyExpression 
+		( 'CHECKED' 
 			( 'BY' nonEmptyPropertyUsageList )?
 		)?
 		'MESSAGE' propertyExpression
-
+		
 		( 'PROPERTIES' nonEmptyPropertyExpressionList )?
 		';'
 	;
@@ -2531,23 +2665,23 @@ constraintStatement
 followsStatement
 
 
-	: mappedProperty
+	: mappedProperty 
 		'=>'
-	 followsClause
+	 followsClause 
 		';'
 ;
+	
+followsClause 
 
-followsClause
-
-    :
-        baseEvent
-
+    :	
+        baseEventPE 
+        
          propertyExpression
-		( 'RESOLVE'
+		( 'RESOLVE' 
 			( 'LEFT' )?
 			( 'RIGHT' )?
-		)?
-
+		)? 
+        
 ;
 
 
@@ -2557,14 +2691,14 @@ followsClause
 writeWhenStatement
 
 
-	: mappedProperty
+	: mappedProperty 
 		'<-'
-
+		
 	 propertyExpression
 		'WHEN'
-		( 'DO' )?
+		( 'DO' )? 
 	 propertyExpression
-
+		
 		';'
 	;
 
@@ -2576,16 +2710,16 @@ eventStatement
 
 
 	:	'WHEN'
-	 baseEvent
-
+	 baseEventPE
+		
 	 propertyExpression
 		( 	'ORDER' ( 'DESC' )?
-		 nonEmptyPropertyExpressionList
+		 nonEmptyPropertyExpressionList 
 		)?
 	 inlineStatement
 		'DO'
 	 endDeclTopContextDependentActionDefinitionBody
-
+		
 	;
 
 
@@ -2595,24 +2729,47 @@ eventStatement
 globalEventStatement
 
 
-	:	'ON'
-	 baseEvent
-
+	:	'ON' 
+	 baseEventNotPE
+		
 		( 'SINGLE' )?
-		( 'SHOWDEP' actionOrPropertyUsage)?
 	 endDeclTopContextDependentActionDefinitionBody
-
+		
 	;
 
-baseEvent
+baseEventNotPE 
+
+
+	:
+	    ( ID)?
+	    ( 'GLOBAL'  | 'LOCAL' )?
+		( 'FORMS' ( nonEmptyCompoundIdList ) )?
+		( ( 'GOAFTER' | 'AFTER') ( nonEmptyActionOrPropertyUsageList ) )?
+	;
+
+baseEventPE 
 
 
 	:	( 'GLOBAL'  | 'LOCAL' )?
 		( 'FORMS' ( nonEmptyCompoundIdList ) )?
-		( 'GOAFTER' ( nonEmptyPropertyUsageList ) )?
+		( ( 'GOAFTER' | 'AFTER') ( nonEmptyActionOrPropertyUsageList ) )?
+        (  
+          ID EQ
+        )?
 	;
 
-inlineStatement
+showRecDepActionDefinitionBody  
+
+
+	:	(    'SHOWREC' 
+	        |
+	        'SHOWDEP'
+            ( 'GLOBAL' | 'LOCAL' )?
+        )
+        ( nonEmptyActionOrPropertyUsageList)?
+	;
+
+inlineStatement 
 	:   ( 'NOINLINE'  (  '(' singleParameterList  ')' )? )?
 	    ( 'INLINE' )?
 	;
@@ -2621,24 +2778,11 @@ inlineStatement
 
 
 
-showDepStatement
-
-    :	'SHOWDEP'
-        actionOrPropertyUsage
-        'FROM'
-        actionOrPropertyUsage
-        ';'
-    ;
-
-
-
-
-
 aspectStatement
 
 
-	:	( 	'BEFORE'
-		| 	'AFTER'
+	:	( 	'BEFORE' 
+		| 	'AFTER' 
 		)
 	 mappedProperty
 		'DO' endDeclTopContextDependentActionDefinitionBody
@@ -2649,40 +2793,31 @@ aspectStatement
 
 
 
-tableStatement
+tableStatement 
 
 
-	:	'TABLE' ID '(' classIdList ')' ( 'FULL'  | 'NODEFAULT'  )? ';';
-
-
-
-
-
-loggableStatement
-
-	:	'LOGGABLE' nonEmptyPropertyUsageList ';'
-	;
+	:	'TABLE' ID (  stringLiteral)? '(' classIdList ')' ( 'FULL'  | 'NODEFAULT'  )? ';';
 
 
 
 
 
-mappedPropertyOrSimpleParam
-    :   (    propertyUsage '(' singleParameterList ')'
-        |   singleParameter
+mappedPropertyOrSimpleParam 
+    :   (    propertyUsage '(' singleParameterList ')' 
+        |   singleParameter 
         )
 ;
 
-nonEmptyMappedPropertyOrSimpleParamList
+nonEmptyMappedPropertyOrSimpleParamList 
 
-	: mappedPropertyOrSimpleParam
+	: mappedPropertyOrSimpleParam 
 		( ',' mappedPropertyOrSimpleParam )*
 	;
 
 indexStatement
 
 
-	:	'INDEX' nonEmptyMappedPropertyOrSimpleParamList ';'
+	:	'INDEX' ( stringLiteralNoID)? nonEmptyMappedPropertyOrSimpleParamList ';'
 	;
 
 
@@ -2702,45 +2837,46 @@ windowCreateStatement
 
 windowHideStatement
 	:	'HIDE' 'WINDOW' compoundID ';'
-
+		
 	;
 
-windowType
-	:	'MENU'
-	|	'PANEL'
-	|	'TOOLBAR'
-	|	'TREE'
+windowType 
+	:	'MENU'		
+	|	'PANEL'		
+	|	'TOOLBAR'	
+	|	'TREE'		
+	|	'NATIVE'	
 	;
 
-windowOptions
+windowOptions 
 
-	:	( 	'HIDETITLE'
-		|	'DRAWROOT'
-		|	'HIDESCROLLBARS'
-		| orientation
-		| dockPosition
-		| borderPosition
-		|	'HALIGN' '(' flexAlignmentLiteral ')'
-		|	'VALIGN' '(' flexAlignmentLiteral ')'
-		|	'TEXTHALIGN' '(' flexAlignmentLiteral ')'
-		|	'TEXTVALIGN' '(' flexAlignmentLiteral ')'
+	:	( 	'HIDETITLE' 
+		|	'HIDESCROLLBARS' 
+		| orientation 
+		| dockPosition 
+		| borderPosition 
+		|	'HALIGN' '(' flexAlignmentLiteral ')' 
+		|	'VALIGN' '(' flexAlignmentLiteral ')' 
+		|	'TEXTHALIGN' '(' flexAlignmentLiteral ')' 
+		|	'TEXTVALIGN' '(' flexAlignmentLiteral ')' 
+        |	'CLASS' propertyExpressionOrLiteral 
 		)*
 	;
 
-borderPosition
-	:	'LEFT'
-	|	'RIGHT'
-	|	'TOP'
-	|	'BOTTOM'
+borderPosition 
+	:	'LEFT'		
+	|	'RIGHT'		
+	|	'TOP'		
+	|	'BOTTOM'	
 	;
 
-dockPosition
-	:	'POSITION' '(' intLiteral ',' intLiteral ',' intLiteral ',' intLiteral ')'
+dockPosition 
+	:	'POSITION' '(' intLiteral ',' intLiteral ',' intLiteral ',' intLiteral ')' 
 	;
 
-orientation
-	:	'VERTICAL'
-	|	'HORIZONTAL'
+orientation 
+	:	'VERTICAL'		
+	|	'HORIZONTAL'	
 	;
 
 
@@ -2765,18 +2901,18 @@ navigatorElementStatementBody
 
 moveNavigatorElementStatement
 	:	'MOVE' navigatorElementSelector ( localizedStringLiteral)? navigatorElementOptions
-
+		
 		navigatorElementStatementBody
 	;
 
 newNavigatorElementStatement
 
 	:	'NEW' navigatorElementDescription navigatorElementOptions
-
+		
 		navigatorElementStatementBody
 	;
 
-navigatorElementDescription
+navigatorElementDescription 
 
 
 	:	'FOLDER' ID ( localizedStringLiteral)?
@@ -2784,30 +2920,26 @@ navigatorElementDescription
 	|	( 'ACTION'  )? ( ( ID)? ( localizedStringLiteral)? '=')? propertyUsage
 	;
 
-navigatorElementOptions
+navigatorElementOptions 
 
-	:
-	( 	'WINDOW' compoundID
-	| navigatorElementInsertPosition
-	|	'IMAGE' stringLiteral
+	:	
+	( 	( 'WINDOW' compoundID  ( 'PARENT' )? )
+	| navigatorElementRelativePosition 
+	|	( 'IMAGE' ( propertyExpressionOrLiteral)?  | 'NOIMAGE'  )
+	|	'CLASS'  propertyExpressionOrLiteral 
+	|   'HEADER'  propertyExpression 
 	)*
-	;
-
-navigatorElementInsertPosition
-
-	: insertRelativePositionLiteral  navigatorElementSelector
-	|	'FIRST'
 	;
 
 editNavigatorElementStatement
 	: navigatorElementSelector ( localizedStringLiteral)? navigatorElementOptions
-
+		
 		navigatorElementStatementBody
 	;
-
-navigatorElementSelector
+	
+navigatorElementSelector 
 	: compoundID
-
+		
 	;
 
 
@@ -2817,19 +2949,19 @@ navigatorElementSelector
 
 
 designStatement
+ 
 
-
-	: designHeader
+	: designHeader	
 		componentStatementBody
 	;
 
-designHeader
+designHeader 
 
 
 	:	'DESIGN' compoundID ( localizedStringLiteral )? ( 'CUSTOM' )?
 	;
 
-componentStatementBody
+componentStatementBody 
 	:	'{'
 		( 	setObjectPropertyStatement
 		|	setupComponentStatement
@@ -2848,53 +2980,47 @@ setupComponentStatement
 
 newComponentStatement
 
-	:	'NEW' ID componentInsertPosition
-
+	:	'NEW' ID ( componentRelativePosition)?
+		
 		componentStatementBody
 	;
-
+	
 moveComponentStatement
 
-	:	'MOVE' componentSelector  componentInsertPosition
-
+	:	'MOVE' componentSelector  ( componentRelativePosition)?
+		
 		componentStatementBody
-	;
-
-componentInsertPosition
-
-	:	( 	( insertRelativePositionLiteral  componentSelector )
-		|	'FIRST'
-		)?
 	;
 
 removeComponentStatement
 	:	'REMOVE' componentSelector ';'
-
+		
 	;
 
-componentSelector
+componentSelector 
     :
-        formComponentSelector
+        formComponentSelector 
     ;
-
-formComponentSelector
+    
+formComponentSelector 
 	:	'PARENT' '(' componentSelector ')'
-
-	|	'PROPERTY' '(' propertySelector ')'
+		
+	|	'PROPERTY' '(' propertySelector ')' 
+	|   'FILTER' '(' filterSelector ')' 
 	|   formContainersComponentSelector
-
+	    
 	| ID
-
+		
 	;
-formContainersComponentSelector
-    :    groupObjectTreeComponentSelector
-    |    componentSingleSelectorType
-    |   'GROUP' '(' (    ','  groupObjectTreeSelector
-                    |    compoundID ','  groupObjectTreeSelector
-                    |    compoundID
-                    |
+formContainersComponentSelector 
+    :    groupObjectTreeComponentSelector 
+    |    componentSingleSelectorType 
+    |   'GROUP' '(' (    ','  groupObjectTreeSelector 
+                    |    compoundID ','  groupObjectTreeSelector 
+                    |    compoundID 
+                    |   
                     ) ')'
-    |   'FILTERGROUP' '('  ID ')'
+    |   'FILTERGROUP' '('  ID ')' 
     ;
 
 componentSingleSelectorType
@@ -2902,50 +3028,58 @@ componentSingleSelectorType
     	'BOX' | 'OBJECTS' | 'TOOLBARBOX' | 'TOOLBARLEFT' | 'TOOLBARRIGHT' | 'TOOLBAR' | 'PANEL'
     ;
 
-groupObjectTreeSelector
+groupObjectTreeSelector 
     :
-           'TREE'  ID
-        |    ID
+           'TREE'  ID 
+        |    ID 
     ;
 
-groupObjectTreeComponentSelector
+groupObjectTreeComponentSelector 
 
     :
-        (  componentSingleSelectorType  | groupObjectTreeComponentSelectorType  )
+        (  componentSingleSelectorType  
+        |   groupObjectTreeComponentSelectorType 
+            )
         '('  groupObjectTreeSelector ')'
-
+        
     ;
 
 groupObjectTreeComponentSelectorType
     :
-    	'TOOLBARSYSTEM' | 'FILTERGROUPS' | 'USERFILTER' | 'GRIDBOX' | 'CLASSCHOOSER' | 'GRID'
+    	'TOOLBARSYSTEM' | 'FILTERGROUPS' | 'USERFILTER' | 'GRIDBOX' | 'CLASSCHOOSER' | 'GRID' | 'FILTERBOX' | 'FILTERS' | 'FILTERCONTROLS'
     ;
 
-propertySelector
+propertySelector 
 	: ID
-
-	| mappedPropertyDraw
-
+		
+	| mappedPropertyDraw	
+		
+	;
+	
+filterSelector 
+	: ID
+		
+	| mappedPropertyDraw	
+		
 	;
 
-setObjectPropertyStatement
-	:	ID EQ componentPropertyValue ';'
+setObjectPropertyStatement 
+	:	ID EQ componentPropertyValue ';'  
 	;
 
-componentPropertyValue
-	:
-
-
-
-
-	|   dimensionLiteral
-	|   booleanLiteral
-	|   tbooleanLiteral
-	|   boundsIntLiteral
-	|   boundsDoubleLiteral
-	|   containerTypeLiteral
-	|   flexAlignmentLiteral
-	|   designPropertyObject
+componentPropertyValue 
+	:   
+    
+	
+	
+	|   dimensionLiteral 
+	|   booleanLiteral 
+	|   tbooleanLiteral 
+	|   boundsIntLiteral 
+	|   boundsDoubleLiteral 
+	|   containerTypeLiteral 
+	|   flexAlignmentLiteral 
+	|   designPropertyObject 
 	;
 
 
@@ -2956,11 +3090,11 @@ componentPropertyValue
 metaCodeDeclarationStatement
 
 
-
+	
 	:	'META' ID '(' idList ')'
-
+        
         statements
-
+        
 		'END'
 	;
 
@@ -2968,35 +3102,43 @@ metaCodeDeclarationStatement
 metaCodeStatement
 
 
-	:	'@' compoundID '(' metaCodeIdList ')'
-		(
-
+	:	'@' compoundID '(' metaCodeIdList ')' 
+		( 
+		
 		'{'
 		statements
 		'}'
-
-		)?
-		';'
+		
+		)? 
+		';'	
 	;
 
 
-metaCodeIdList
+metaCodeIdList 
 
-	: metaCodeId
-		(  ',' metaCodeId )*
+	: metaCodeId 
+		(  ',' metaCodeId )* 
 	;
 
 
-metaCodeId
-	: compoundID
-	| PRIMITIVE_TYPE
-	| metaCodeLiteral
-	|
+metaCodeId 
+	: compoundID 		
+	| primitiveType	 
+	| metaCodeLiteral 
+	|	
 	;
 
-metaCodeLiteral
-	:	STRING_LITERAL
-	| 	UINT_LITERAL
+metaCodeLiteral 
+	: metaCodeStringLiteral 
+	| metaCodeNonStringLiteral 
+	;
+
+metaCodeStringLiteral 
+	: multilineStringLiteral 
+	;
+
+metaCodeNonStringLiteral
+	:	UINT_LITERAL
 	|	UNUMERIC_LITERAL
 	|	UDOUBLE_LITERAL
 	|	ULONG_LITERAL
@@ -3018,354 +3160,338 @@ emptyStatement
 	:	';'
 	;
 
-mappedProperty
-	: propertyUsage
+mappedProperty 
+	: propertyUsage 
 		'('
-	 typedParameterList
+	 typedParameterList 
 		')'
 	;
 
-typedParameter
+typedParameter 
 
 	:	( classId)? ID
 	;
 
-simpleNameWithCaption
-	: ID
+imageStatement 
+    :   ( 'IMAGE' ( stringLiteral)?  | 'NOIMAGE'  )
+    ;
+
+simpleNameWithCaption 
+	: ID 
 		( localizedStringLiteral )?
 	;
 
-simpleNameOrWithCaption
-	:	(    ID
+simpleNameOrWithCaption 
+	:	(    ID 
 		    ( localizedStringLiteral )?
         )
         |
             ( localizedStringLiteral )
 	;
-
-idList
+	
+idList 
 
 	:	( nonEmptyIdList )?
 	;
 
-classIdList
+classIdList 
 
 	:	( nonEmptyClassIdList )?
 	;
 
-nonEmptyClassIdList
+nonEmptyClassIdList 
 
-	: classId
+	: classId 
 		( ',' classId )*
 	;
 
-signatureClassList
+signatureClassList 
 
 	:	( nonEmptySignatureClassList )?
 	;
 
-nonEmptySignatureClassList
+nonEmptySignatureClassList 
 
-	: signatureClass
+	: signatureClass 
 		( ',' signatureClass )*
 	;
 
-typedParameterList
+typedParameterList 
 
 	:	( nonEmptyTypedParameterList )?
 	;
 
-nonEmptyTypedParameterList
+nonEmptyTypedParameterList 
 
-	: typedParameter
+	: typedParameter 
 		( ',' typedParameter )*
 	;
 
+nonEmptyIdList 
 
-compoundIdList
-
-	:	( nonEmptyCompoundIdList )?
-	;
-
-nonEmptyIdList
-
-	: ID
+	: ID	
 		( ',' ID	)*
 	;
 
-nonEmptyCompoundIdList
+nonEmptyCompoundIdList 
 
-	: compoundID
+	: compoundID	
 		( ',' compoundID	)*
 	;
 
-nonEmptyPropertyUsageList
+nonEmptyPropertyUsageList 
 
-	: propertyUsage
-		( ',' propertyUsage )*
-	;
+	: propertyUsage 
+		( ',' propertyUsage )* 
+	; 
 
-singleParameterList
+singleParameterList 
 
-	:	( singleParameter
+	:	( singleParameter 
 		( ',' singleParameter )*)?
 	;
 
-actionPDBList
+nonEmptyActionPDBList 
 
-	:	( nonEmptyActionPDBList )?
-	;
-
-nonEmptyActionPDBList
-
-	: keepContextFlowActionDefinitionBody
+	: keepContextFlowActionDefinitionBody 
 		( ',' keepContextFlowActionDefinitionBody )*
-	;
+	; 
 
-propertyExpressionList
+propertyExpressionList 
 
 	:	( nonEmptyPropertyExpressionList )?
 	;
+	
+
+nonEmptyPropertyExpressionList 
+
+	: propertyExpression 
+		( ',' propertyExpression )* 
+	;
+	
+constantProperty 
 
 
-nonEmptyPropertyExpressionList
-
-	: propertyExpression
-		( ',' propertyExpression )*
+	:  expressionLiteral 
 	;
 
-constantProperty
-
-
-	:  literal
+expressionLiteral 
+	: commonLiteral  	
+	| multilineStringLiteral 
 	;
 
-literal
-	:  uintLiteral
-	| ulongLiteral
-	| unumericLiteral
-	| udoubleLiteral
-	| localizedStringLiteralNoID
-	| booleanLiteral
-	| tbooleanLiteral
-	| dateLiteral
-	| dateTimeLiteral
-	| timeLiteral
-	| staticObjectID
-	| NULL_LITERAL
-	| colorLiteral
+literal 
+	: commonLiteral  	
+	| localizedStringLiteralNoID	
 	;
 
-classId
-	: compoundID
-	| PRIMITIVE_TYPE
+commonLiteral 
+	:  uintLiteral	
+	| ulongLiteral	
+	| unumericLiteral   
+	| udoubleLiteral 
+	| booleanLiteral	
+	| tbooleanLiteral	
+	| dateLiteral	
+	| dateTimeLiteral 
+	| timeLiteral 	
+	| staticObjectID 
+	| NULL_LITERAL 	
+	| colorLiteral 		
 	;
 
-signatureClass
-	: classId
-	| unknownClass
+classId 
+	: compoundID 
+	| primitiveType 
 	;
 
-unknownClass
+signatureClass 
+	: classId 
+	| unknownClass 	
+	; 
+
+unknownClass 
 	:	'?'
 	;
-
-typeId
-	: PRIMITIVE_TYPE
-	| 'OBJECT'
-	;
-
-compoundID
+	
+compoundID 
 	: ID  ( '.' ID )?
 	;
 
-staticObjectID
-	:	( ID '.')? ID '.' ID
+staticObjectID 
+	:	( ID '.')? ID '.' ID 
 	;
 
-formGroupObjectID
-    :	( ID '.')? ID '.' ID
+formGroupObjectID 
+    :	( ID '.')? ID '.' ID 
     ;
 
-formObjectID
-    :	( ID '.')? ID '.' ID
+formObjectID 
+    :	( ID '.')? ID '.' ID 
     ;
 
-formComponentID
+formComponentID 
 
     :
         ( ID '.')? ID '.'
-
-         formComponentSelector
-
+        
+         formComponentSelector 
+        
     ;
 
-formPropertyID
+formPropertyID 
 
     :
         ( ID '.')? ID '.'
-
+        
         formPropertySelector
-
+        
     ;
 
-multiCompoundID
-	: ID  ( '.' ID  )*
+exclusiveOverrideOption 
+	:	'OVERRIDE' 
+	|	'EXCLUSIVE' 
 	;
 
-exclusiveOverrideOption
-	:	'OVERRIDE'
-	|	'EXCLUSIVE'
-	;
-
-abstractExclusiveOverrideOption
+abstractExclusiveOverrideOption 
 	:	( 'OVERRIDE'  (  abstractCaseAddOption  )? )
 	|	'EXCLUSIVE'
 	;
 
-abstractCaseAddOption
-	:	'FIRST'
+abstractCaseAddOption 
+	:	'FIRST' 
 	|	'LAST'
 	;
 
-colorLiteral
-	: COLOR_LITERAL
-	|	'RGB' '(' uintLiteral ',' uintLiteral ',' uintLiteral ')'
+colorLiteral 
+	: COLOR_LITERAL 
+	|	'RGB' '(' uintLiteral ',' uintLiteral ',' uintLiteral ')'  
 	;
 
-stringLiteral
-	: STRING_LITERAL
-    |   ID
+multilineStringLiteral 
+	: STRING_LITERAL 
+	;
+
+stringLiteral 
+	: stringLiteralNoID 
+    |   ID 
+	;
+
+primitiveType 
+	: PRIMITIVE_TYPE | JSON_TYPE | HTML_TYPE 
 	;
 
 
 
-localizedStringLiteralNoID
-	: STRING_LITERAL
+localizedStringLiteralNoID 
+	: multilineStringLiteral 
+	;
+stringLiteralNoID 
+	: multilineStringLiteral 
 	;
 
-localizedStringLiteral
-	: localizedStringLiteralNoID
-    |   ID
+localizedStringLiteral 
+	: localizedStringLiteralNoID 
+    |   ID 
 	;
 
-intLiteral
+intLiteral 
 
 	:	( MINUS )?
-	 uintLiteral
+	 uintLiteral  
 	;
 
-longLiteral
+doubleLiteral 
 
 	:	( MINUS )?
-	 ulongLiteral
+	 UNUMERIC_LITERAL 
+		
 	;
 
-doubleLiteral
-
-	:	( MINUS )?
-	 UNUMERIC_LITERAL
-
+dateLiteral 
+	: DATE_LITERAL 
 	;
 
-dateLiteral
-	: DATE_LITERAL
+dateTimeLiteral 
+	: DATETIME_LITERAL 
 	;
 
-dateTimeLiteral
-	: DATETIME_LITERAL
+timeLiteral 
+	: TIME_LITERAL 
 	;
 
-timeLiteral
-	: TIME_LITERAL
+booleanLiteral 
+	: LOGICAL_LITERAL 
 	;
 
-booleanLiteral
-	: LOGICAL_LITERAL
+tbooleanLiteral 
+	: T_LOGICAL_LITERAL 
 	;
 
-tbooleanLiteral
-	: T_LOGICAL_LITERAL
+dimensionLiteral 
+	:	'(' intLiteral ',' intLiteral ')' 
 	;
 
-dimensionLiteral
-	:	'(' intLiteral ',' intLiteral ')'
+boundsIntLiteral 
+	:	'(' intLiteral ',' intLiteral ',' intLiteral ',' intLiteral ')' 
 	;
 
-boundsIntLiteral
-	:	'(' intLiteral ',' intLiteral ',' intLiteral ',' intLiteral ')'
+boundsDoubleLiteral 
+	:	'(' doubleLiteral ',' doubleLiteral ',' doubleLiteral ',' doubleLiteral ')' 
 	;
 
-boundsDoubleLiteral
-	:	'(' doubleLiteral ',' doubleLiteral ',' doubleLiteral ',' doubleLiteral ')'
+codeLiteral 
+	: CODE_LITERAL 
 	;
 
-codeLiteral
-	: CODE_LITERAL
+containerTypeLiteral 
+	:	'CONTAINERV' 	
+	|	'CONTAINERH' 	
+	|	'COLUMNS' 
+	|	'TABBED' 
+	|	'SPLITH' 
+	|	'SPLITV' 
+	|   'SCROLL' 
 	;
 
-insertRelativePositionLiteral
-	:	'BEFORE'
-	|	'AFTER'
-	;
-
-containerTypeLiteral
-	:	'CONTAINERV'
-	|	'CONTAINERH'
-	|	'COLUMNS'
-	|	'TABBED'
-	|	'SPLITH'
-	|	'SPLITV'
-	|   'SCROLL'
-	;
-
-flexAlignmentLiteral
-    :   'START'
-    |   'CENTER'
-    |   'END'
-    |   'STRETCH'
+flexAlignmentLiteral 
+    :   'START' 
+    |   'CENTER' 
+    |   'END' 
+    |   'STRETCH' 
     ;
 
-propertyEditTypeLiteral
-	:	'CHANGEABLE'
-	|	'READONLY'
+propertyEditTypeLiteral 
+	:	'CHANGEABLE' 
+	|	'READONLY' 
 	;
 
-emailRecipientTypeLiteral
-	:	'TO'
-	|	'CC'
-	|	'BCC'
+emailRecipientTypeLiteral 
+	:	'TO'	
+	|	'CC'	
+	|	'BCC'	
 	;
 
-emailAttachFormat
-	:	'PDF'
-	|	'DOCX'
-	|	'HTML'
-	|	'RTF'
-	|	'XLSX'
-	|	'DBF'
+udoubleLiteral 
+	: UDOUBLE_LITERAL 
+	;	
+
+unumericLiteral 
+	: UNUMERIC_LITERAL 
 	;
 
-udoubleLiteral
-	: UDOUBLE_LITERAL
+uintLiteral 
+	: UINT_LITERAL 
+	;		
+
+ulongLiteral 
+	: ULONG_LITERAL 
 	;
 
-unumericLiteral
-	: UNUMERIC_LITERAL
+relOperand 
+	:	RELEQ_OPERAND | LESS_OPERAND | GR_OPERAND	
 	;
-
-uintLiteral
-	: UINT_LITERAL
-	;
-
-ulongLiteral
-	: ULONG_LITERAL
-	;
-
-relOperand
-	:	RELEQ_OPERAND | LESS_OPERAND | GR_OPERAND
-	;
-
+	
 multOperand
 	:	MULT | DIV
 	;
@@ -3373,10 +3499,9 @@ multOperand
 
 
 
-
-fragment NEWLINE	:	'\r'?'\n';
+	
+fragment NEWLINE	:	'\r'?'\n'; 
 fragment SPACE		:	( ' '|'\t');
-fragment STR_LITERAL_CHAR	: ( '\\' ~( '\n'|'\r')) | ~( '\r'|'\n'|'\''|'\\');
 fragment DIGIT		:	'0'..'9';
 fragment DIGITS		:	( '0'..'9')+;
 fragment EDIGITS	:	( '0'..'9')*;
@@ -3386,7 +3511,17 @@ fragment NEXT_ID_LETTER		: ( 'a'..'z'|'A'..'Z'|'_'|'0'..'9');
 fragment OPEN_CODE_BRACKET	: '<{';
 fragment CLOSE_CODE_BRACKET : '}>';
 
-fragment STRING_LITERAL_FRAGMENT : '\'' STR_LITERAL_CHAR* '\'';
+fragment STR_LITERAL_CHAR
+	:	( '\\'.)
+	|	~( '\''|'\\'|'$')
+	| 	 '$'
+	;
+
+fragment ESCAPED_STR_LITERAL_CHAR:	( '\\'.) | ~( '\\'|'{'|'}');
+fragment BLOCK: '{' ( BLOCK | ESCAPED_STR_LITERAL_CHAR)* '}';
+fragment INTERPOLATION_BLOCK: '${' ( BLOCK | ESCAPED_STR_LITERAL_CHAR)* '}';
+fragment STRING_LITERAL_FRAGMENT:	'\'' ( INTERPOLATION_BLOCK | STR_LITERAL_CHAR)* '\'';
+
 fragment ID_FRAGMENT : FIRST_ID_LETTER NEXT_ID_LETTER*;
 fragment NEXTID_FRAGMENT : NEXT_ID_LETTER+;
 
@@ -3394,18 +3529,21 @@ fragment ID_META_FRAGMENT : ( ID_FRAGMENT? ( ( '###' | '##') NEXTID_FRAGMENT)+) 
 
 fragment STRING_LITERAL_ID_FRAGMENT : ID_FRAGMENT | STRING_LITERAL_FRAGMENT;
 fragment STRING_LITERAL_NEXTID_FRAGMENT : NEXTID_FRAGMENT | STRING_LITERAL_FRAGMENT;
-fragment STRING_META_FRAGMENT : ( STRING_LITERAL_ID_FRAGMENT ( '###' | '##'))* STRING_LITERAL_FRAGMENT ( ( '###' | '##') STRING_LITERAL_NEXTID_FRAGMENT)*;
+fragment STRING_META_FRAGMENT : ( NEXTID_FRAGMENT ( '###' | '##'))* STRING_LITERAL_FRAGMENT ( ( '###' | '##') STRING_LITERAL_NEXTID_FRAGMENT)*;
 
 fragment INTERVAL_TYPE : 'DATE' | 'DATETIME' | 'TIME' | 'ZDATETIME';
 
-PRIMITIVE_TYPE  :	'INTEGER' | 'DOUBLE' | 'LONG' | 'BOOLEAN' | 'TBOOLEAN' | 'DATE' | 'DATETIME' | 'ZDATETIME' | 'YEAR'
-                |   'TEXT' | 'RICHTEXT' | 'HTMLTEXT' | 'TIME' | 'WORDFILE' | 'IMAGEFILE' | 'PDFFILE' | 'DBFFILE' | 'RAWFILE'
-				| 	'FILE' | 'EXCELFILE' | 'TEXTFILE' | 'CSVFILE' | 'HTMLFILE' | 'JSONFILE' | 'XMLFILE' | 'TABLEFILE'
+PRIMITIVE_TYPE  :	'INTEGER' | 'DOUBLE' | 'LONG' | 'BOOLEAN' | 'TBOOLEAN' | 'DATE' | ( 'DATETIME' ( '[' '0'..'6' ']')?) | ( 'ZDATETIME' ( '[' '0'..'6' ']')?) | 'YEAR'
+                |   'TEXT' | 'RICHTEXT' | 'HTMLTEXT' | ( 'TIME' ( '[' '0'..'6' ']')?) | 'WORDFILE' | 'IMAGEFILE' | 'PDFFILE' | 'DBFFILE' | 'RAWFILE'
+				| 	'FILE' | 'EXCELFILE' | 'TEXTFILE' | 'CSVFILE' | 'HTMLFILE' | 'JSONFILE' | 'XMLFILE' | 'TABLEFILE' | 'NAMEDFILE'
 				|   'WORDLINK' | 'IMAGELINK' | 'PDFLINK' | 'DBFLINK'
 				|   'RAWLINK' | 'LINK' | 'EXCELLINK' | 'TEXTLINK' | 'CSVLINK' | 'HTMLLINK' | 'JSONLINK' | 'XMLLINK' | 'TABLELINK'
 				|   ( 'BPSTRING' ( '[' DIGITS ']')?) | ( 'BPISTRING' ( '[' DIGITS ']')?)
 				|	( 'STRING' ( '[' DIGITS ']')?) | ( 'ISTRING' ( '[' DIGITS ']')?) | 'NUMERIC' ( '[' DIGITS ',' DIGITS ']')? | 'COLOR'
-				|   ( 'INTERVAL' ( '[' INTERVAL_TYPE ']'));
+				|   ( 'INTERVAL' ( '[' INTERVAL_TYPE ']'))
+				|   'TSVECTOR' | 'TSQUERY';
+JSON_TYPE       :   'JSON';
+HTML_TYPE       :   'HTML';
 LOGICAL_LITERAL :	'TRUE' | 'FALSE';
 T_LOGICAL_LITERAL:	'TTRUE' | 'TFALSE';
 NULL_LITERAL	:	'NULL';
@@ -3417,11 +3555,11 @@ COMMENTS		:	( '//' .*? '\n') -> channel(HIDDEN) ;
 UINT_LITERAL 	:	DIGITS;
 ULONG_LITERAL	:	DIGITS( 'l'|'L');
 UDOUBLE_LITERAL	:	DIGITS '.' EDIGITS( 'd'|'D');
-UNUMERIC_LITERAL:	DIGITS '.' EDIGITS;
-DATE_LITERAL	:	DIGIT DIGIT DIGIT DIGIT '_' DIGIT DIGIT '_' DIGIT DIGIT;
-DATETIME_LITERAL:	DIGIT DIGIT DIGIT DIGIT '_' DIGIT DIGIT '_' DIGIT DIGIT '_' DIGIT DIGIT ':' DIGIT DIGIT;
+UNUMERIC_LITERAL:	DIGITS '.' EDIGITS;	  
+DATE_LITERAL	:	DIGIT DIGIT DIGIT DIGIT '_' DIGIT DIGIT '_' DIGIT DIGIT; 
+DATETIME_LITERAL:	DIGIT DIGIT DIGIT DIGIT '_' DIGIT DIGIT '_' DIGIT DIGIT '_' DIGIT DIGIT ':' DIGIT DIGIT;	
 TIME_LITERAL	:	DIGIT DIGIT ':' DIGIT DIGIT;
-RECURSIVE_PARAM :	'$' FIRST_ID_LETTER NEXT_ID_LETTER*;
+RECURSIVE_PARAM :	'$' FIRST_ID_LETTER NEXT_ID_LETTER*;	
 EQ_OPERAND		:	( '==') | ( '!=');
 EQ	            :	'=';
 LESS_OPERAND	: 	( '<');
